@@ -16,7 +16,7 @@
         }
 
         body {
-            /* Màu nền tối giống mẫu ảnh */
+            /* Màu nền tối sang trọng */
             background-color: #1a1924; 
             font-family: 'Montserrat', sans-serif;
             color: #ffffff;
@@ -26,7 +26,7 @@
             overflow-x: hidden;
         }
 
-        /* Họa tiết lượn sóng trang trí mờ ở góc phải dưới (giống mẫu) */
+        /* Họa tiết lượn sóng trang trí mờ ở góc phải dưới */
         body::after {
             content: "";
             position: absolute;
@@ -51,7 +51,7 @@
         .header img {
             height: 50px; /* Chỉnh kích thước logo */
             width: auto;
-            background-color: white; /* Lót nền trắng nhỏ cho logo nếu logo dạng trong suốt bị chìm */
+            background-color: white; /* Lót nền trắng nhỏ để logo không bị chìm trên nền tối */
             padding: 5px 10px;
             border-radius: 6px;
         }
@@ -81,14 +81,14 @@
 
         .subtitle {
             font-size: 1.2rem;
-            color: #9b9bba; /* Màu tím/xám nhạt giống mẫu */
+            color: #9b9bba;
             margin-bottom: 10px;
             font-weight: 600;
         }
 
         .api-desc {
             font-size: 1.1rem;
-            color: #79BD9A; /* Nhấn màu xanh từ mã bạn cung cấp */
+            color: #79BD9A; /* Màu xanh lá nhạt nhấn nhẹ */
             font-style: italic;
         }
 
@@ -118,7 +118,7 @@
             box-shadow: 0 15px 30px rgba(0,0,0,0.4);
         }
 
-        /* Các mã màu bạn yêu cầu */
+        /* Các mã màu phối theo yêu cầu */
         .card-1 { background-color: #0d4f8d; }
         .card-2 { background-color: #0d2b47; }
         .card-3 { background-color: #3B8686; }
@@ -155,7 +155,7 @@
         <div class="company-name">
             Thai Corp International<br>(Vietnam) Co., Ltd.
         </div>
-        <img src="https://images.squarespace-cdn.com/content/v1/5bc15b02f8111624faae9e07/1544605912423-E7H1S0X4Y0V7IPX1G0Z2/ThaCorp_BJC.png" alt="ThaiCorp Logo">
+        <img src="logo.png" alt="ThaiCorp Logo">
     </div>
 
     <div class="title-section">
@@ -189,27 +189,27 @@
     </div>
 
     <script>
-        // Thông tin API bạn cung cấp
         const sheetId = '1Xtwk_Y7UGKNw2YC9c4kblae71mHahzr7GqV-sfiie6E';
         const apiKey = 'AIzaSyC8oIfsPGtSedj73Qky4aasg98xqkrWT5s';
+        const range = 'D!A1'; // Gọi chính xác ô A1 của trang tính (sheet) tên là D
         
-        // Gọi dữ liệu từ ô A1 của Sheet (Mặc định trang đầu tiên)
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/A1?key=${apiKey}`;
+        // Mã hóa ký tự đặc biệt (như dấu !) để truyền vào URL một cách an toàn
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(range)}?key=${apiKey}`;
 
         fetch(url)
             .then(response => response.json())
             .then(data => {
                 const descElement = document.getElementById('sheet-description');
                 if (data.values && data.values.length > 0) {
-                    // Nếu gọi API thành công, hiển thị nội dung ô A1
+                    // Hiển thị nội dung lấy được từ ô D!A1
                     descElement.innerText = data.values[0][0];
                 } else {
-                    descElement.innerText = 'Không tìm thấy dữ liệu trong ô A1.';
+                    descElement.innerText = 'Không tìm thấy dữ liệu trong ô A1 của sheet D.';
                 }
             })
             .catch(error => {
                 console.error('Lỗi khi tải Google Sheet:', error);
-                document.getElementById('sheet-description').innerText = 'Không thể kết nối đến Google Sheet. (Vui lòng kiểm tra quyền chia sẻ của Sheet).';
+                document.getElementById('sheet-description').innerText = 'Không thể kết nối đến Google Sheet. (Vui lòng kiểm tra lại quyền chia sẻ Anyone with link của file Sheet).';
             });
     </script>
 </body>
