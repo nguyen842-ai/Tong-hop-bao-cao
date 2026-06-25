@@ -6,9 +6,10 @@
     <title>ThaiCorp Reports Hub 2026</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
+        /* 1. CẤU HÌNH CƠ BẢN */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -18,98 +19,118 @@
         body {
             font-family: 'Montserrat', sans-serif;
             min-height: 100vh;
-            /* Chặn thanh cuộn ngang do các thẻ kéo dài quá màn hình */
-            overflow-x: hidden; 
-            /* Đường cắt xéo 105 độ */
-            background: linear-gradient(105deg, #f4f4f7 48%, #1a1924 48.1%);
+            overflow-x: hidden; /* Chặn thanh cuộn ngang */
             display: flex;
+            flex-direction: column; /* Xếp container và footer theo chiều dọc */
+            /* Đường cắt xéo giao diện 105 độ */
+            background: linear-gradient(105deg, #f4f4f7 55%, #1a1924 55.1%);
         }
 
-        /* ----- Main Layout ----- */
+        /* 2. LAYOUT CHIA ĐÔI */
         .container {
             display: flex;
             width: 100%;
-            max-width: 1800px; /* Mở rộng không gian tối đa */
-            margin: 0; /* Bỏ căn giữa để dồn sát trái */
-            padding-left: 20px; /* Cách lề trái một khoảng nhỏ vừa đủ đẹp */
+            max-width: 1800px;
+            margin: 0; 
+            padding-left: 20px; 
+            flex-grow: 1; /* Tự động giãn để đẩy footer xuống đáy */
         }
 
-       /* ----- CỘT TRÁI (Logo + Tiêu đề) ----- */
+        /* ----- CỘT TRÁI (Vùng Sáng + Hình nền) ----- */
         .left-content {
-            width: 58%; /* Nới rộng cột trái để chứa tiêu đề không xuống dòng */
+            width: 58%; 
             padding: 40px 20px 50px 20px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* Dịch nội dung lên trên */
-            gap: 40px; /* Khoảng cách giữa Logo và Tiêu đề */
+            justify-content: flex-start;
+            gap: 50px;
+            position: relative; 
         }
 
-        /* Header thẳng hàng lề trái */
+        /* --- SỬ DỤNG FILE ẢNH NỀN CỤ CỤC BỘ TRÊN GITHUB --- */
+        .left-content::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Trỏ trực tiếp đến file background.jpg bạn up lên Github */
+            background-image: url('background.jpg'); 
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15; /* Độ mờ 15% để làm nổi bật chữ tiêu đề */
+            z-index: -1; 
+        }
+
+        /* 3. CẤU HÌNH LOGO & TÊN CÔNG TY */
         .header {
             display: flex;
             align-items: center;
             gap: 15px;
+            z-index: 1;
         }
 
         .header img {
             height: 65px;
             width: auto;
-            /* Đã xóa nền trắng, box-shadow, padding */
         }
 
         .company-name {
             font-size: 1.1rem;
             font-weight: 800;
-            color: #1755a6; /* Màu xanh bạn yêu cầu */
+            color: #1755a6; 
             text-transform: uppercase;
             line-height: 1.3;
             letter-spacing: 0.5px;
         }
 
-        /* Cụm Tiêu đề chính */
+        /* 4. CỤM TIÊU ĐỀ ĐỒNG BỘ MÀU SẮC */
         .title-section {
             display: flex;
             flex-direction: column;
             gap: 15px;
+            z-index: 1;
         }
 
         .main-title {
-            font-size: 3.8rem;
+            font-size: clamp(2.5rem, 4vw, 3.8rem); 
             font-weight: 900;
-            color: #1a1924;
+            color: #0d4f8d; /* Màu ô số 1 */
             text-transform: uppercase;
             line-height: 1.1;
+            white-space: nowrap; /* Giữ tiêu đề thẳng tắp 1 dòng */
         }
 
         .main-title span {
-            color: #d63031; /* Nhấn màu đỏ */
-            display: block;
-            font-size: 2.6rem;
+            color: #3B8686; /* Màu ô số 3 */
+            display: inline; 
         }
 
         .subtitle-box {
-            border-left: 5px solid #d63031;
+            border-left: 6px solid #79BD9A; /* Màu ô số 4 */
             padding-left: 20px;
             margin-top: 10px;
         }
 
         .subtitle {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #444;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0d2b47; /* Màu ô số 2 */
         }
 
         .sheet-info {
             font-size: 1.05rem;
-            color: #666;
+            color: #79BD9A; /* Màu ô số 4 */
             margin-top: 8px;
             font-style: italic;
+            font-weight: 600;
         }
 
-        /* ----- CỘT PHẢI (4 Thẻ báo cáo) ----- */
+        /* ----- CỘT PHẢI (Vùng Tối + 4 Báo cáo) ----- */
         .right-content {
-            width: 55%;
-            padding: 50px 0; /* Xóa khoảng cách lề phải để thẻ tràn viền */
+            width: 42%;
+            padding: 50px 0;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -118,18 +139,17 @@
 
         .card-wrapper {
             display: block;
-            width: 115%; /* Kéo dài 115% để vượt ra khỏi mép phải màn hình */
-            margin-left: -5%; /* Dịch sang trái một chút để ăn khớp với đường cắt xéo */
+            width: 120%; 
+            margin-left: -10%; 
             text-decoration: none;
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .report-card {
-            /* Nghiêng thẻ thành hình bình hành (nghiêng lùi sang trái -15 độ song song với nền) */
             transform: skewX(-15deg);
-            padding: 35px 60px 35px 90px; /* Tăng padding trái để bù lại độ nghiêng */
-            border-radius: 20px; /* Bo góc mềm mại */
-            box-shadow: -12px 12px 30px rgba(0,0,0,0.15); /* Đổ bóng 3D */
+            padding: 35px 60px 35px 90px;
+            border-radius: 20px;
+            box-shadow: -12px 12px 30px rgba(0,0,0,0.15);
             color: white;
             display: flex;
             flex-direction: column;
@@ -137,14 +157,12 @@
             transition: box-shadow 0.4s ease, filter 0.4s ease;
         }
 
-        /* Trả nội dung chữ bên trong về dạng đứng thẳng (không bị nghiêng theo thẻ) */
         .report-card > div {
             transform: skewX(15deg); 
         }
 
-        /* Hiệu ứng trượt khi lướt chuột */
         .card-wrapper:hover {
-            transform: translateX(-30px); /* Nổi và trượt nhẹ sang trái */
+            transform: translateX(-30px);
         }
         
         .card-wrapper:hover .report-card {
@@ -152,7 +170,7 @@
             filter: brightness(1.1);
         }
 
-        /* Các mã màu yêu cầu */
+        /* Mã màu 4 ô báo cáo */
         .bg-1 { background-color: #0d4f8d; }
         .bg-2 { background-color: #0d2b47; }
         .bg-3 { background-color: #3B8686; }
@@ -171,20 +189,31 @@
             opacity: 0.9;
             line-height: 1.5;
             font-weight: 400;
-            max-width: 85%; /* Giới hạn độ dài chữ không tràn quá xa */
+            max-width: 85%;
         }
 
-        /* ----- Responsive (Mobile & Tablet) ----- */
+        /* ----- FOOTER (DÒNG BẢN QUYỀN) ----- */
+        .site-footer {
+            padding: 20px 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: rgba(13, 43, 71, 0.7); /* Sử dụng màu ô 2 pha mờ tinh tế */
+            z-index: 5;
+            text-align: left;
+        }
+
+        /* 5. RESPONSIVE CHO MOBILE */
         @media (max-width: 1024px) {
             body { background: #f4f4f7; flex-direction: column; }
-            .container { flex-direction: column; max-width: 100%; }
-            .left-content, .right-content { width: 100%; padding: 30px; }
-            
-            /* Tắt hình bình hành trên điện thoại để dễ đọc */
+            .container { flex-direction: column; padding: 20px; }
+            .left-content { width: 100%; padding: 10px; }
+            .main-title { white-space: normal; } 
+            .right-content { width: 100%; padding: 20px 0; background: #1a1924; }
             .card-wrapper { width: 100%; margin-left: 0; }
-            .report-card { transform: none; border-radius: 16px; padding: 30px 40px; }
+            .report-card { transform: none; border-radius: 16px; padding: 30px; }
             .report-card > div { transform: none; }
             .card-wrapper:hover { transform: translateY(-10px); }
+            .site-footer { text-align: center; color: #888; }
         }
     </style>
 </head>
@@ -193,7 +222,6 @@
     <div class="container">
         
         <div class="left-content">
-            
             <header class="header">
                 <img src="logo.png" alt="ThaiCorp Logo">
                 <div class="company-name">
@@ -202,17 +230,15 @@
             </header>
 
             <div class="title-section">
-                <h1 class="main-title">Tổng hợp báo cáo <span>Nội bộ 2026</span></h1>
+                <h1 class="main-title">TỔNG HỢP BÁO CÁO <span>NỘI BỘ 2026</span></h1>
                 <div class="subtitle-box">
                     <p class="subtitle">Thực hiện bởi team Route To Market</p>
-                    <p class="sheet-info" id="api-status">...</p>
+                    <p class="sheet-info" id="api-status">Đang đồng bộ dữ liệu từ hệ thống...</p>
                 </div>
             </div>
-
         </div>
 
         <div class="right-content">
-            
             <a href="https://nguyen842-ai.github.io/Productivities-C-level/" target="_blank" class="card-wrapper">
                 <div class="report-card bg-1">
                     <div>
@@ -234,7 +260,7 @@
             <a href="https://nguyen842-ai.github.io/Summary-report-wet-market-project.2026/" target="_blank" class="card-wrapper">
                 <div class="report-card bg-3">
                     <div>
-                        <h3>SUMMARY WET MARKET PROJECT</h3>
+                        <h3>BÁO CÁO TỔNG HỢP DỰ ÁN CHỢ</h3>
                         <p>Tổng hợp tiến trình, chiến lược, nhân sự và performance của dự án</p>
                     </div>
                 </div>
@@ -248,10 +274,13 @@
                     </div>
                 </div>
             </a>
-
         </div>
 
     </div>
+
+    <footer class="site-footer">
+        &copy; 2020 Copyright by Thai Corp. All rights reserved.
+    </footer>
 
     <script>
         const sheetId = '1Xtwk_Y7UGKNw2YC9c4kblae71mHahzr7GqV-sfiie6E';
