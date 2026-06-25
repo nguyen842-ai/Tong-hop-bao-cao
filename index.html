@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ThaiCorp International - Reports Hub</title>
+    <title>TỔNG HỢP BÁO CÁO NỘI BỘ 2026 - ThaiCorp</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    
     <style>
-        /* Thiết lập mặc định */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -13,92 +16,152 @@
         }
 
         body {
-            /* Màu nền trắng ngà */
-            background-color: #FFFFF0; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Màu nền tối giống mẫu ảnh */
+            background-color: #1a1924; 
+            font-family: 'Montserrat', sans-serif;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 40px 60px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Họa tiết lượn sóng trang trí mờ ở góc phải dưới (giống mẫu) */
+        body::after {
+            content: "";
+            position: absolute;
+            bottom: -100px;
+            right: -100px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(121,189,154,0.1) 0%, rgba(26,25,36,0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        /* ----- HEADER (GÓC PHẢI) ----- */
+        .header {
             display: flex;
-            flex-direction: column;
+            justify-content: flex-end;
             align-items: center;
-            padding: 50px 20px;
+            gap: 15px;
+            margin-bottom: 60px;
         }
 
-        /* Container cho Logo */
-        .header-logo {
-            text-align: center;
-            margin-bottom: 40px;
+        .header img {
+            height: 50px; /* Chỉnh kích thước logo */
+            width: auto;
+            background-color: white; /* Lót nền trắng nhỏ cho logo nếu logo dạng trong suốt bị chìm */
+            padding: 5px 10px;
+            border-radius: 6px;
         }
 
-        .header-logo img {
-            max-width: 350px; /* Độ lớn của logo */
-            height: auto;
+        .company-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-align: right;
+            color: #d1d1db;
+            text-transform: uppercase;
         }
 
-        /* Bố cục lưới 2 hàng x 2 cột cho các báo cáo */
+        /* ----- MAIN TITLES ----- */
+        .title-section {
+            margin-bottom: 50px;
+            max-width: 800px;
+        }
+
+        .main-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #9b9bba; /* Màu tím/xám nhạt giống mẫu */
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .api-desc {
+            font-size: 1.1rem;
+            color: #79BD9A; /* Nhấn màu xanh từ mã bạn cung cấp */
+            font-style: italic;
+        }
+
+        /* ----- GRIDS (4 Ô MÀU) ----- */
         .report-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-            max-width: 1000px;
-            width: 100%;
+            gap: 25px;
+            max-width: 1100px;
         }
 
-        /* Style chung cho mỗi ô (thẻ a) */
         .report-card {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 35px 30px;
-            border-radius: 12px;
+            padding: 40px 35px;
+            border-radius: 16px;
             text-decoration: none;
-            color: #ffffff; /* Chữ màu trắng để nổi bật trên nền đậm */
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            color: #ffffff;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Hiệu ứng khi di chuột vào ô */
         .report-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
         }
 
-        /* Gắn mã màu riêng cho từng ô theo yêu cầu */
+        /* Các mã màu bạn yêu cầu */
         .card-1 { background-color: #0d4f8d; }
         .card-2 { background-color: #0d2b47; }
         .card-3 { background-color: #3B8686; }
         .card-4 { background-color: #79BD9A; }
 
-        /* Tiêu đề trong ô */
         .report-title {
             font-size: 1.4rem;
-            font-weight: bold;
-            margin-bottom: 12px;
+            font-weight: 800;
+            margin-bottom: 15px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            line-height: 1.3;
+            line-height: 1.4;
         }
 
-        /* Phần mô tả trong ô */
         .report-desc {
-            font-size: 1.05rem;
-            line-height: 1.5;
-            opacity: 0.9; /* Làm mờ nhẹ phần mô tả so với tiêu đề */
+            font-size: 1rem;
+            line-height: 1.6;
+            opacity: 0.85;
+            font-weight: 400;
         }
 
-        /* Responsive: Tự động chuyển thành 1 cột trên màn hình điện thoại */
+        /* Responsive cho điện thoại */
         @media (max-width: 768px) {
-            .report-grid {
-                grid-template-columns: 1fr;
-            }
-            .header-logo img {
-                max-width: 250px;
-            }
+            body { padding: 30px 20px; }
+            .header { flex-direction: column; align-items: flex-end; }
+            .main-title { font-size: 2.2rem; }
+            .report-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <div class="header-logo">
-        <img src="logo.png" alt="ThaiCorp International">
+    <div class="header">
+        <div class="company-name">
+            Thai Corp International<br>(Vietnam) Co., Ltd.
+        </div>
+        <img src="https://images.squarespace-cdn.com/content/v1/5bc15b02f8111624faae9e07/1544605912423-E7H1S0X4Y0V7IPX1G0Z2/ThaCorp_BJC.png" alt="ThaiCorp Logo">
+    </div>
+
+    <div class="title-section">
+        <h1 class="main-title">TỔNG HỢP BÁO CÁO NỘI BỘ 2026</h1>
+        <div class="subtitle">Thực hiện bởi team Route To Market</div>
+        <div class="api-desc" id="sheet-description">Đang tải dữ liệu từ Google Sheet...</div>
     </div>
 
     <div class="report-grid">
@@ -119,11 +182,35 @@
         </a>
 
         <a href="https://nguyen842-ai.github.io/Tracking-tuyen-cho-truyen-thong/" target="_blank" class="report-card card-4">
-            <div class="report-title">ROUTE PRODUCTIVITES- WET MARKET</div>
+            <div class="report-title">ROUTE PRODUCTIVITES - WET MARKET</div>
             <div class="report-desc">Chi tiết hiệu suất tuyến bán hàng theo ngày của nhân viên đặc biệt tuyến chợ truyền thống</div>
         </a>
 
     </div>
 
+    <script>
+        // Thông tin API bạn cung cấp
+        const sheetId = '1Xtwk_Y7UGKNw2YC9c4kblae71mHahzr7GqV-sfiie6E';
+        const apiKey = 'AIzaSyC8oIfsPGtSedj73Qky4aasg98xqkrWT5s';
+        
+        // Gọi dữ liệu từ ô A1 của Sheet (Mặc định trang đầu tiên)
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/A1?key=${apiKey}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const descElement = document.getElementById('sheet-description');
+                if (data.values && data.values.length > 0) {
+                    // Nếu gọi API thành công, hiển thị nội dung ô A1
+                    descElement.innerText = data.values[0][0];
+                } else {
+                    descElement.innerText = 'Không tìm thấy dữ liệu trong ô A1.';
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi khi tải Google Sheet:', error);
+                document.getElementById('sheet-description').innerText = 'Không thể kết nối đến Google Sheet. (Vui lòng kiểm tra quyền chia sẻ của Sheet).';
+            });
+    </script>
 </body>
 </html>
