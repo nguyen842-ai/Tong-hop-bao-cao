@@ -103,12 +103,12 @@
         }
 
         .main-title span {
-    display: block;      /* Lệnh này bắt buộc chữ phải nhảy xuống dòng mới */
-    font-size: 35px;     /* Bạn có thể chỉnh con số này nhỏ đi (ví dụ 24px) để vừa ý */
-    color: #0d4f8d;      /* màu */
-    margin-top: 10px;    /* Tạo một khoảng cách nhỏ với dòng chữ phía trên */
-    font-weight: 900;
-}
+            display: block;      /* Lệnh này bắt buộc chữ phải nhảy xuống dòng mới */
+            font-size: 35px;     /* Bạn có thể chỉnh con số này nhỏ đi (ví dụ 24px) để vừa ý */
+            color: #0d4f8d;      /* màu */
+            margin-top: 10px;    /* Tạo một khoảng cách nhỏ với dòng chữ phía trên */
+            font-weight: 900;
+        }
 
         .subtitle-box {
             border-left: 6px solid #646464; /* Màu ô số 4 */
@@ -130,14 +130,38 @@
             font-weight: 600;
         }
 
-        /* ----- CỘT PHẢI (Vùng Tối + 4 Báo cáo) ----- */
+        /* --- NÚT TOOL MAP --- */
+        .map-tool-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 18px;
+            padding: 8px 16px;
+            background-color: transparent;
+            color: #0d4f8d;
+            border: 2px solid #0d4f8d;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            width: fit-content;
+        }
+
+        .map-tool-link:hover {
+            background-color: #0d4f8d;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(13, 79, 141, 0.3);
+        }
+
+        /* ----- CỘT PHẢI (Vùng Tối + 5 Báo cáo) ----- */
         .right-content {
             width: 42%;
             padding: 50px 0;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 25px;
+            gap: 20px; /* Giảm gap một chút để vừa 5 box */
         }
 
         .card-wrapper {
@@ -150,7 +174,7 @@
 
         .report-card {
             transform: skewX(-15deg);
-            padding: 35px 60px 35px 90px;
+            padding: 30px 60px 30px 90px;
             border-radius: 20px;
             box-shadow: -12px 12px 30px rgba(0,0,0,0.15);
             color: white;
@@ -173,14 +197,19 @@
             filter: brightness(1.1);
         }
 
-        /* Mã màu 4 ô báo cáo */
+        /* Mã màu 5 ô báo cáo */
         .bg-1 { background-color: #0d4f8d; }
         .bg-2 { background-color: #0d2b47; }
         .bg-3 { background-color: #3B8686; }
         .bg-4 { background-color: #79BD9A; }
+        .bg-5 { background-color: #A8D5BA; color: #0d2b47 !important; } /* Thêm màu cho box 5 và đổi màu chữ cho tương phản tốt */
+
+        .bg-5 h3, .bg-5 p {
+            color: #0d2b47; /* Đảm bảo chữ nổi bật trên nền sáng */
+        }
 
         .report-card h3 {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 800;
             margin-bottom: 8px;
             text-transform: uppercase;
@@ -188,7 +217,7 @@
         }
 
         .report-card p {
-            font-size: 1rem;
+            font-size: 0.95rem;
             opacity: 0.9;
             line-height: 1.5;
             font-weight: 400;
@@ -237,6 +266,10 @@
                 <div class="subtitle-box">
                     <p class="subtitle">Thực hiện bởi team Route To Market</p>
                     <p class="sheet-info" id="api-status">Đang đồng bộ dữ liệu từ hệ thống...</p>
+                    
+                    <a href="https://nguyen842-ai.github.io/Tool-ve-ban-do/" target="_blank" class="map-tool-link" title="Mô tả: Công cụ hỗ trợ vẽ bản đồ trực quan">
+                        📍 Công cụ vẽ bản đồ
+                    </a>
                 </div>
             </div>
         </div>
@@ -260,19 +293,28 @@
                 </div>
             </a>
 
-            <a href="https://nguyen842-ai.github.io/Summary-report-wet-market-project.2026/" target="_blank" class="card-wrapper">
+            <a href="https://nguyen842-ai.github.io/Tracking-route-by-map/" target="_blank" class="card-wrapper">
                 <div class="report-card bg-3">
                     <div>
-                        <h3>3. Summary wet market report</h3>
+                        <h3>3. CUSTOMER VISIT DETAIL</h3>
+                        <p>Theo dõi chi tiết ghé thăm khách hàng của nhân viên: thứ tự và tuyến trên bản đồ thực tế</p>
+                    </div>
+                </div>
+            </a>
+
+            <a href="https://nguyen842-ai.github.io/Summary-report-wet-market-project.2026/" target="_blank" class="card-wrapper">
+                <div class="report-card bg-4">
+                    <div>
+                        <h3>4. SUMMARY WET MARKET REPORT</h3>
                         <p>Tổng hợp tiến trình, chiến lược, nhân sự và performance của dự án</p>
                     </div>
                 </div>
             </a>
 
             <a href="https://nguyen842-ai.github.io/Tracking-tuyen-cho-truyen-thong/" target="_blank" class="card-wrapper">
-                <div class="report-card bg-4">
+                <div class="report-card bg-5">
                     <div>
-                        <h3>4. ROUTE PRODUCTIVITES - WET MARKET</h3>
+                        <h3>5. ROUTE PRODUCTIVITES - WET MARKET</h3>
                         <p>Chi tiết hiệu suất tuyến bán hàng theo ngày của nhân viên đặc biệt tuyến chợ truyền thống</p>
                     </div>
                 </div>
