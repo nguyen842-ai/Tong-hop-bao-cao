@@ -87,7 +87,7 @@
 
         /* LAYOUT CHIA ĐÔI */
         .container {
-            display: none; /* Ẩn mặc định, đăng nhập xong mới hiện */
+            display: none; 
             width: 100%;
             max-width: 1800px;
             margin: 0; 
@@ -255,75 +255,80 @@
     </footer>
 
     <script>
-        const SUPABASE_URL = 'https://mrqldgycwovpbmzdeuyz.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_itZfZBVw7bxE184tGh7x8A_0_r-QB5p';
-        
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        (function () {
+            const SUPABASE_URL = 'https://mrqldgycwovpbmzdeuyz.supabase.co';
+            const SUPABASE_ANON_KEY = 'sb_publishable_itZfZBVw7bxE184tGh7x8A_0_r-QB5p';
+            
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        async function checkSession() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                document.getElementById('login-overlay').style.display = 'none';
-                document.getElementById('main-content').style.display = 'flex';
-                loadSheetData(); 
-            } else {
-                document.getElementById('login-overlay').style.display = 'flex';
-                document.getElementById('main-content').style.display = 'none';
+            async function checkSession() {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session) {
+                    document.getElementById('login-overlay').style.display = 'none';
+                    document.getElementById('main-content').style.display = 'flex';
+                    loadSheetData(); 
+                } else {
+                    document.getElementById('login-overlay').style.display = 'flex';
+                    document.getElementById('main-content').style.display = 'none';
+                }
             }
-        }
 
-        async function handleLogin() {
-            const email = document.getElementById('email-input').value;
-            const pass = document.getElementById('pass-input').value;
-            const btn = document.getElementById('login-btn-text');
-            const errorMsg = document.getElementById('login-error');
+            async function handleLogin() {
+                const email = document.getElementById('email-input').value;
+                const pass = document.getElementById('pass-input').value;
+                const btn = document.getElementById('login-btn-text');
+                const errorMsg = document.getElementById('login-error');
 
-            if (!email || !pass) return;
+                if (!email || !pass) return;
 
-            btn.innerText = 'ĐANG XỬ LÝ...';
-            errorMsg.style.display = 'none';
+                btn.innerText = 'ĐANG XỬ LÝ...';
+                errorMsg.style.display = 'none';
 
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: email,
-                password: pass,
-            });
-
-            if (error) {
-                btn.innerText = 'ĐĂNG NHẬP / LOGIN';
-                errorMsg.innerText = 'Sai tài khoản hoặc mật khẩu, hoặc tài khoản đã bị khóa!';
-                errorMsg.style.display = 'block';
-            } else {
-                btn.innerText = 'THÀNH CÔNG!';
-                setTimeout(checkSession, 500);
-            }
-        }
-
-        async function handleLogout() {
-            await supabase.auth.signOut();
-            window.location.reload();
-        }
-
-        checkSession();
-
-        function loadSheetData() {
-            const sheetId = '1Xtwk_Y7UGKNw2YC9c4kblae71mHahzr7GqV-sfiie6E';
-            const apiKey = 'AIzaSyC8oIfsPGtSedj73Qky4aasg98xqkrWT5s';
-            const range = 'D!A1'; 
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(range)}?key=${apiKey}`;
-
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    const statusElement = document.getElementById('api-status');
-                    if (data.values && data.values[0]) {
-                        statusElement.innerText = data.values[0][0];
-                    }
-                })
-                .catch(error => {
-                    console.error('Lỗi API Sheet:', error);
-                    document.getElementById('api-status').innerText = 'Dữ liệu hệ thống đang được cập nhật.';
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: pass,
                 });
-        }
+
+                if (error) {
+                    btn.innerText = 'ĐĂNG NHẬP / LOGIN';
+                    errorMsg.innerText = 'Sai tài khoản hoặc mật khẩu, hoặc tài khoản đã bị khóa!';
+                    errorMsg.style.display = 'block';
+                } else {
+                    btn.innerText = 'THÀNH CÔNG!';
+                    setTimeout(checkSession, 500);
+                }
+            }
+
+            async function handleLogout() {
+                await supabase.auth.signOut();
+                window.location.reload();
+            }
+
+            checkSession();
+
+            function loadSheetData() {
+                const sheetId = '1Xtwk_Y7UGKNw2YC9c4kblae71mHahzr7GqV-sfiie6E';
+                const apiKey = 'AIzaSyC8oIfsPGtSedj73Qky4aasg98xqkrWT5s';
+                const range = 'D!A1'; 
+                const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(range)}?key=${apiKey}`;
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        const statusElement = document.getElementById('api-status');
+                        if (data.values && data.values[0]) {
+                            statusElement.innerText = data.values[0][0];
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Lỗi API Sheet:', error);
+                        document.getElementById('api-status').innerText = 'Dữ liệu hệ thống đang được cập nhật.';
+                    });
+            }
+
+            window.handleLogin = handleLogin;
+            window.handleLogout = handleLogout;
+        })();
     </script>
 </body>
 </html>
