@@ -8,35 +8,94 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="faviconTCI.png">
-    <style>
-        /* 1. CẤU HÌNH CƠ BẢN */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+    <style>
+        /* CẤU HÌNH CƠ BẢN */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Montserrat', sans-serif;
             min-height: 100vh;
-            overflow-x: hidden; /* Chặn thanh cuộn ngang */
+            overflow-x: hidden;
             display: flex;
-            flex-direction: column; /* Xếp container và footer theo chiều dọc */
-            /* Đường cắt xéo giao diện 105 độ */
+            flex-direction: column;
             background: linear-gradient(105deg, #f4f4f7 55%, #1a1924 55.1%);
         }
 
-        /* 2. LAYOUT CHIA ĐÔI */
-        .container {
+        /* ----- MÀN HÌNH ĐĂNG NHẬP (LỚP PHỦ BẢO MẬT) ----- */
+        #login-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #1a1924; /* Màu tối đồng bộ */
+            z-index: 9999;
             display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            transition: opacity 0.5s ease;
+        }
+        .login-box {
+            background: #2a2938;
+            padding: 40px 50px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-box h2 {
+            margin-bottom: 25px;
+            font-weight: 800;
+            color: #79BD9A;
+            letter-spacing: 1px;
+        }
+        .login-input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #4a4958;
+            background: #1a1924;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            outline: none;
+        }
+        .login-input:focus { border-color: #79BD9A; }
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: #0d4f8d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .login-btn:hover { background: #1755a6; }
+        #login-error {
+            color: #ff4d4d;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            display: none;
+        }
+
+        /* LAYOUT CHIA ĐÔI */
+        .container {
+            display: none; /* Ẩn mặc định, đăng nhập xong mới hiện */
             width: 100%;
             max-width: 1800px;
             margin: 0; 
             padding-left: 20px; 
-            flex-grow: 1; /* Tự động giãn để đẩy footer xuống đáy */
+            flex-grow: 1;
         }
 
-        /* ----- CỘT TRÁI (Vùng Sáng + Hình nền) ----- */
+        /* CỘT TRÁI */
         .left-content {
             width: 58%; 
             padding: 40px 20px 50px 20px;
@@ -46,199 +105,61 @@
             gap: 50px;
             position: relative; 
         }
-
-        /* --- SỬ DỤNG FILE ẢNH NỀN CỤ CỤC BỘ TRÊN GITHUB --- */
         .left-content::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            /* Trỏ trực tiếp đến file background.jpg bạn up lên Github */
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url('background.jfif'); 
-            background-size: cover;
-            background-position: center;
-            opacity: 0.15; /* Độ mờ 15% để làm nổi bật chữ tiêu đề */
-            z-index: -1; 
+            background-size: cover; background-position: center;
+            opacity: 0.15; z-index: -1; 
         }
 
-        /* 3. CẤU HÌNH LOGO & TÊN CÔNG TY */
-        .header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            z-index: 1;
-        }
-
-        .header img {
-            height: 65px;
-            width: auto;
-        }
-
-        .company-name {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: #1755a6; 
-            text-transform: uppercase;
-            line-height: 1.3;
-            letter-spacing: 0.5px;
-        }
-
-        /* 4. CỤM TIÊU ĐỀ ĐỒNG BỘ MÀU SẮC */
-        .title-section {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            z-index: 1;
-        }
-
-        .main-title {
-            font-size: clamp(2.5rem, 4vw, 3.8rem); 
-            font-weight: 900;
-            color: #0d2b47; /* Màu ô số 1 */
-            text-transform: uppercase;
-            line-height: 1.1;
-            white-space: wrap;
-        }
-
-        .main-title span {
-            display: block;      /* Lệnh này bắt buộc chữ phải nhảy xuống dòng mới */
-            font-size: 35px;     /* Bạn có thể chỉnh con số này nhỏ đi (ví dụ 24px) để vừa ý */
-            color: #0d4f8d;      /* màu */
-            margin-top: 10px;    /* Tạo một khoảng cách nhỏ với dòng chữ phía trên */
-            font-weight: 900;
-        }
-
-        .subtitle-box {
-            border-left: 6px solid #646464; /* Màu ô số 4 */
-            padding-left: 20px;
-            margin-top: 10px;
-        }
-
-        .subtitle {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #0d2b47; /* Màu ô số 2 */
-        }
-
-        .sheet-info {
-            font-size: 1.05rem;
-            color: #646464; /* Màu ô số 4 */
-            margin-top: 8px;
-            font-style: italic;
-            font-weight: 600;
-        }
-
-        /* --- NÚT TOOL MAP --- */
-        .map-tool-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 18px;
-            padding: 8px 16px;
-            background-color: transparent;
-            color: #0d4f8d;
-            border: 2px solid #0d4f8d;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            width: fit-content;
-        }
-
-        .map-tool-link:hover {
-            background-color: #0d4f8d;
-            color: #ffffff;
-            box-shadow: 0 4px 10px rgba(13, 79, 141, 0.3);
-        }
-
-        /* ----- CỘT PHẢI (Vùng Tối + 5 Báo cáo) ----- */
-        .right-content {
-            width: 42%;
-            padding: 50px 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 20px; /* Giảm gap một chút để vừa 5 box */
-        }
-
-        .card-wrapper {
-            display: block;
-            width: 120%; 
-            margin-left: -10%; 
-            text-decoration: none;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .report-card {
-            transform: skewX(-15deg);
-            padding: 30px 60px 30px 90px;
-            border-radius: 20px;
-            box-shadow: -12px 12px 30px rgba(0,0,0,0.15);
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            transition: box-shadow 0.4s ease, filter 0.4s ease;
-        }
-
-        .report-card > div {
-            transform: skewX(15deg); 
-        }
-
-        .card-wrapper:hover {
-            transform: translateX(-30px);
-        }
+        /* HEADER & TITTLE */
+        .header { display: flex; align-items: center; gap: 15px; z-index: 1; justify-content: space-between; padding-right: 20px; }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .header img { height: 65px; width: auto; }
+        .company-name { font-size: 1.1rem; font-weight: 800; color: #1755a6; text-transform: uppercase; line-height: 1.3; }
         
-        .card-wrapper:hover .report-card {
-            box-shadow: -20px 20px 40px rgba(0,0,0,0.3);
-            filter: brightness(1.1);
+        .logout-btn {
+            padding: 8px 16px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            transition: opacity 0.3s;
         }
+        .logout-btn:hover { opacity: 0.8; }
 
-        /* Mã màu 5 ô báo cáo */
-        .bg-1 { background-color: #0d4f8d; }
-        .bg-2 { background-color: #0d2b47; }
-        .bg-3 { background-color: #3B8686; }
-        .bg-4 { background-color: #79BD9A; }
-        .bg-5 { background-color: #A8D5BA; color: #0d2b47 !important; } /* Thêm màu cho box 5 và đổi màu chữ cho tương phản tốt */
+        .title-section { display: flex; flex-direction: column; gap: 15px; z-index: 1; }
+        .main-title { font-size: clamp(2.5rem, 4vw, 3.8rem); font-weight: 900; color: #0d2b47; line-height: 1.1; }
+        .main-title span { display: block; font-size: 35px; color: #0d4f8d; margin-top: 10px; font-weight: 900; }
+        .subtitle-box { border-left: 6px solid #646464; padding-left: 20px; margin-top: 10px; }
+        .subtitle { font-size: 1.25rem; font-weight: 700; color: #0d2b47; }
+        .sheet-info { font-size: 1.05rem; color: #646464; margin-top: 8px; font-style: italic; font-weight: 600; }
+        .map-tool-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; padding: 8px 16px; background-color: transparent; color: #0d4f8d; border: 2px solid #0d4f8d; border-radius: 8px; text-decoration: none; font-size: 0.95rem; font-weight: 700; transition: all 0.3s ease; width: fit-content; }
+        .map-tool-link:hover { background-color: #0d4f8d; color: #ffffff; box-shadow: 0 4px 10px rgba(13, 79, 141, 0.3); }
 
-        .bg-5 h3, .bg-5 p {
-            color: #0d2b47; /* Đảm bảo chữ nổi bật trên nền sáng */
-        }
+        /* CỘT PHẢI */
+        .right-content { width: 42%; padding: 50px 0; display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+        .card-wrapper { display: block; width: 120%; margin-left: -10%; text-decoration: none; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .report-card { transform: skewX(-15deg); padding: 30px 60px 30px 90px; border-radius: 20px; box-shadow: -12px 12px 30px rgba(0,0,0,0.15); color: white; display: flex; flex-direction: column; justify-content: center; transition: box-shadow 0.4s ease, filter 0.4s ease; }
+        .report-card > div { transform: skewX(15deg); }
+        .card-wrapper:hover { transform: translateX(-30px); }
+        .card-wrapper:hover .report-card { box-shadow: -20px 20px 40px rgba(0,0,0,0.3); filter: brightness(1.1); }
+        .bg-1 { background-color: #0d4f8d; } .bg-2 { background-color: #0d2b47; } .bg-3 { background-color: #3B8686; } .bg-4 { background-color: #79BD9A; } .bg-5 { background-color: #A8D5BA; color: #0d2b47 !important; }
+        .bg-5 h3, .bg-5 p { color: #0d2b47; }
+        .report-card h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .report-card p { font-size: 0.95rem; opacity: 0.9; line-height: 1.5; font-weight: 400; max-width: 85%; }
 
-        .report-card h3 {
-            font-size: 1.3rem;
-            font-weight: 800;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        /* FOOTER */
+        .site-footer { padding: 20px 40px; font-size: 0.85rem; font-weight: 600; color: rgba(13, 43, 71, 0.7); z-index: 5; text-align: left; }
 
-        .report-card p {
-            font-size: 0.95rem;
-            opacity: 0.9;
-            line-height: 1.5;
-            font-weight: 400;
-            max-width: 85%;
-        }
-
-        /* ----- FOOTER (DÒNG BẢN QUYỀN) ----- */
-        .site-footer {
-            padding: 20px 40px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: rgba(13, 43, 71, 0.7); /* Sử dụng màu ô 2 pha mờ tinh tế */
-            z-index: 5;
-            text-align: left;
-        }
-
-        /* 5. RESPONSIVE CHO MOBILE */
         @media (max-width: 1024px) {
             body { background: #f4f4f7; flex-direction: column; }
             .container { flex-direction: column; padding: 20px; }
             .left-content { width: 100%; padding: 10px; }
+            .header { flex-direction: column; align-items: flex-start; gap: 20px;}
             .main-title { white-space: normal; } 
             .right-content { width: 100%; padding: 20px 0; background: #1a1924; }
             .card-wrapper { width: 100%; margin-left: 0; }
@@ -251,14 +172,26 @@
 </head>
 <body>
 
-    <div class="container">
-        
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2>THAI CORP HUB</h2>
+            <input type="email" id="email-input" class="login-input" placeholder="Email công ty...">
+            <input type="password" id="pass-input" class="login-input" placeholder="Mật khẩu...">
+            <button onclick="handleLogin()" class="login-btn" id="login-btn-text">ĐĂNG NHẬP</button>
+            <p id="login-error">Sai tài khoản hoặc mật khẩu!</p>
+        </div>
+    </div>
+
+    <div class="container" id="main-content">
         <div class="left-content">
             <header class="header">
-                <img src="logo.png" alt="ThaiCorp Logo">
-                <div class="company-name">
-                    Thai Corp International<br>(Vietnam) Co., Ltd.
+                <div class="header-left">
+                    <img src="logo.png" alt="ThaiCorp Logo">
+                    <div class="company-name">
+                        Thai Corp International<br>(Vietnam) Co., Ltd.
+                    </div>
                 </div>
+                <button onclick="handleLogout()" class="logout-btn">Đăng xuất</button>
             </header>
 
             <div class="title-section">
@@ -266,7 +199,6 @@
                 <div class="subtitle-box">
                     <p class="subtitle">Thực hiện bởi team Route To Market</p>
                     <p class="sheet-info" id="api-status">Đang đồng bộ dữ liệu từ hệ thống...</p>
-                    
                     <a href="https://nguyen842-ai.github.io/Tool-ve-ban-do/" target="_blank" class="map-tool-link" title="Mô tả: Công cụ hỗ trợ vẽ bản đồ trực quan">
                         📍 Công cụ vẽ bản đồ
                     </a>
@@ -283,7 +215,6 @@
                     </div>
                 </div>
             </a>
-
             <a href="https://nguyen842-ai.github.io/Routeproductivities.2026/" target="_blank" class="card-wrapper">
                 <div class="report-card bg-2">
                     <div>
@@ -292,7 +223,6 @@
                     </div>
                 </div>
             </a>
-
             <a href="https://nguyen842-ai.github.io/Tracking-route-by-map/" target="_blank" class="card-wrapper">
                 <div class="report-card bg-3">
                     <div>
@@ -301,7 +231,6 @@
                     </div>
                 </div>
             </a>
-
             <a href="https://nguyen842-ai.github.io/Summary-report-wet-market-project.2026/" target="_blank" class="card-wrapper">
                 <div class="report-card bg-4">
                     <div>
@@ -310,7 +239,6 @@
                     </div>
                 </div>
             </a>
-
             <a href="https://nguyen842-ai.github.io/Tracking-tuyen-cho-truyen-thong/" target="_blank" class="card-wrapper">
                 <div class="report-card bg-5">
                     <div>
@@ -320,7 +248,6 @@
                 </div>
             </a>
         </div>
-
     </div>
 
     <footer class="site-footer">
@@ -328,24 +255,84 @@
     </footer>
 
     <script>
-        const sheetId = '1Xtwk_Y7UGKNw2YC9c4kblae71mHahzr7GqV-sfiie6E';
-        const apiKey = 'AIzaSyC8oIfsPGtSedj73Qky4aasg98xqkrWT5s';
-        const range = 'D!A1'; 
+        // 🛑 ĐIỀN THÔNG TIN SUPABASE CỦA BẠN VÀO ĐÂY
+        const SUPABASE_URL = 'https://mrqldgycwovpbmzdeuyz.supabase.co/rest/v1/';
+        const SUPABASE_ANON_KEY = 'sb_publishable_itZfZBVw7bxE184tGh7x8A_0_r-QB5p';
         
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(range)}?key=${apiKey}`;
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                const statusElement = document.getElementById('api-status');
-                if (data.values && data.values[0]) {
-                    statusElement.innerText = data.values[0][0];
-                }
-            })
-            .catch(error => {
-                console.error('Lỗi API Sheet:', error);
-                document.getElementById('api-status').innerText = 'Dữ liệu hệ thống đang được cập nhật.';
+        // Hàm kiểm tra trạng thái đăng nhập khi vừa vào web
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                // Đã đăng nhập -> Mở khóa giao diện
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('main-content').style.display = 'flex';
+                loadSheetData(); // Gọi API Google Sheet như cũ
+            } else {
+                // Chưa đăng nhập -> Hiện form
+                document.getElementById('login-overlay').style.display = 'flex';
+                document.getElementById('main-content').style.display = 'none';
+            }
+        }
+
+        // Hàm xử lý khi bấm nút Đăng Nhập
+        async function handleLogin() {
+            const email = document.getElementById('email-input').value;
+            const pass = document.getElementById('pass-input').value;
+            const btn = document.getElementById('login-btn-text');
+            const errorMsg = document.getElementById('login-error');
+
+            if (!email || !pass) return;
+
+            btn.innerText = 'ĐANG XỬ LÝ...';
+            errorMsg.style.display = 'none';
+
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: pass,
             });
+
+            if (error) {
+                btn.innerText = 'ĐĂNG NHẬP';
+                errorMsg.innerText = 'Sai tài khoản hoặc mật khẩu, hoặc tài khoản đã bị khóa!';
+                errorMsg.style.display = 'block';
+            } else {
+                btn.innerText = 'THÀNH CÔNG!';
+                setTimeout(checkSession, 500); // Check lại session để load vào trang
+            }
+        }
+
+        // Hàm xử lý Đăng xuất
+        async function handleLogout() {
+            await supabase.auth.signOut();
+            window.location.reload(); // Tải lại trang để về màn hình Login
+        }
+
+        // Khởi động kiểm tra khi load trang
+        checkSession();
+
+        // ----------------------------------------------------
+        // Logic gọi API Google Sheet cũ (Chỉ chạy khi đã login)
+        function loadSheetData() {
+            const sheetId = '1Xtwk_Y7UGKNw2YC9c4kblae71mHahzr7GqV-sfiie6E';
+            const apiKey = 'AIzaSyC8oIfsPGtSedj73Qky4aasg98xqkrWT5s';
+            const range = 'D!A1'; 
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(range)}?key=${apiKey}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const statusElement = document.getElementById('api-status');
+                    if (data.values && data.values[0]) {
+                        statusElement.innerText = data.values[0][0];
+                    }
+                })
+                .catch(error => {
+                    console.error('Lỗi API Sheet:', error);
+                    document.getElementById('api-status').innerText = 'Dữ liệu hệ thống đang được cập nhật.';
+                });
+        }
     </script>
 </body>
 </html>
