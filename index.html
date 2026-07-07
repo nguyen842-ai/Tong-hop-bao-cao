@@ -27,7 +27,7 @@
         #login-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: #1a1924; /* Màu tối đồng bộ */
+            background: #1a1924;
             z-index: 9999;
             display: flex;
             flex-direction: column;
@@ -174,10 +174,10 @@
 
     <div id="login-overlay">
         <div class="login-box">
-            <h2>Vui lòng đăng nhập để tiếp tục/ Please login to continue</h2>
-            <input type="email" id="email-input" class="login-input" placeholder="Email">
-            <input type="password" id="pass-input" class="login-input" placeholder="Password">
-            <button onclick="handleLogin()" class="login-btn" id="login-btn-text">ĐĂNG NHẬP/ Login</button>
+            <h2>THAI CORP HUB</h2>
+            <input type="email" id="email-input" class="login-input" placeholder="Email công ty...">
+            <input type="password" id="pass-input" class="login-input" placeholder="Mật khẩu...">
+            <button onclick="handleLogin()" class="login-btn" id="login-btn-text">ĐĂNG NHẬP / LOGIN</button>
             <p id="login-error">Sai tài khoản hoặc mật khẩu!</p>
         </div>
     </div>
@@ -255,22 +255,20 @@
     </footer>
 
     <script>
-        // 🛑 ĐIỀN THÔNG TIN SUPABASE CỦA BẠN VÀO ĐÂY
-        const SUPABASE_URL = 'https://mrqldgycwovpbmzdeuyz.supabase.co';
+        // Cấu hình URL và KEY chính xác (khai báo 1 lần duy nhất)
+        const SUPABASE_URL = 'https://mrqldgcycwovpbmzdeuyz.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_itZfZBVw7bxE184tGh7x8A_0_r-QB5p';
         
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Hàm kiểm tra trạng thái đăng nhập khi vừa vào web
+        // Hàm kiểm tra trạng thái đăng nhập
         async function checkSession() {
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
-                // Đã đăng nhập -> Mở khóa giao diện
                 document.getElementById('login-overlay').style.display = 'none';
                 document.getElementById('main-content').style.display = 'flex';
-                loadSheetData(); // Gọi API Google Sheet như cũ
+                loadSheetData(); 
             } else {
-                // Chưa đăng nhập -> Hiện form
                 document.getElementById('login-overlay').style.display = 'flex';
                 document.getElementById('main-content').style.display = 'none';
             }
@@ -294,26 +292,25 @@
             });
 
             if (error) {
-                btn.innerText = 'ĐĂNG NHẬP';
+                btn.innerText = 'ĐĂNG NHẬP / LOGIN';
                 errorMsg.innerText = 'Sai tài khoản hoặc mật khẩu, hoặc tài khoản đã bị khóa!';
                 errorMsg.style.display = 'block';
             } else {
                 btn.innerText = 'THÀNH CÔNG!';
-                setTimeout(checkSession, 500); // Check lại session để load vào trang
+                setTimeout(checkSession, 500);
             }
         }
 
         // Hàm xử lý Đăng xuất
         async function handleLogout() {
             await supabase.auth.signOut();
-            window.location.reload(); // Tải lại trang để về màn hình Login
+            window.location.reload();
         }
 
         // Khởi động kiểm tra khi load trang
         checkSession();
 
-        // ----------------------------------------------------
-        // Logic gọi API Google Sheet cũ (Chỉ chạy khi đã login)
+        // Logic gọi API Google Sheet (Chỉ chạy khi đã login)
         function loadSheetData() {
             const sheetId = '1Xtwk_Y7UGKNw2YC9c4kblae71mHahzr7GqV-sfiie6E';
             const apiKey = 'AIzaSyC8oIfsPGtSedj73Qky4aasg98xqkrWT5s';
