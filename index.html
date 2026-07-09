@@ -17,9 +17,6 @@
 </head>
 <body class="bg-gray-50 font-sans antialiased text-gray-800">
 
-    <!-- ========================================== -->
-    <!-- 1. GIAO DIỆN ĐĂNG NHẬP -->
-    <!-- ========================================== -->
     <div id="login-section" class="flex min-h-screen items-center justify-center px-4">
         <div class="w-full max-w-md space-y-8 rounded-xl bg-white p-10 shadow-lg border border-gray-100">
             <div class="text-center">
@@ -50,9 +47,6 @@
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 2. TRANG WEB TỔNG (DASHBOARD CÓ TABS)      -->
-    <!-- ========================================== -->
     <div id="main-portal" class="hidden-element min-h-screen flex flex-col">
         
         <header class="bg-white shadow-sm border-b border-gray-200">
@@ -65,7 +59,6 @@
                 <div class="flex items-center gap-3 sm:gap-4">
                     <span id="user-greeting" class="text-sm font-medium text-gray-600 hidden sm:inline-block">Xin chào, ...</span>
                     
-                    <!-- BOX CHUYỂN NGỮ (VI/EN) -->
                     <div class="hidden sm:flex bg-gray-200 rounded-lg p-1 items-center">
                         <button id="lang-vi" class="px-3 py-1.5 rounded-md text-sm font-bold transition-all duration-200 bg-white text-[#0c4da2] shadow-sm">
                             🇻🇳 VI
@@ -107,14 +100,12 @@
 
             <div id="tab-contents">
                 
-                <!-- TAB 1 -->
                 <div id="tab-primary" class="tab-content hidden-element">
                     <div class="p-8 text-center bg-white rounded-xl border border-gray-200 border-dashed">
-                        <p data-i18n="empty-primary" class="text-gray-500 italic">Đang cập nhật...</p>
+                        <p data-i18n="empty-primary" class="text-gray-500 italic">Khu vực này hiện chưa có báo cáo nào được gắn.</p>
                     </div>
                 </div>
 
-                <!-- TAB 2 -->
                 <div id="tab-secondary" class="tab-content">
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         <a href="https://nguyen842-ai.github.io/Productivities-C-level/" id="card-report-1" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
@@ -149,7 +140,6 @@
                     </div>
                 </div>
 
-                <!-- TAB 3 -->
                 <div id="tab-support" class="tab-content hidden-element">
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         <a href="https://nguyen842-ai.github.io/Tool-ve-ban-do/" id="card-tool-1" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
@@ -159,14 +149,17 @@
                         </a>
                     </div>
                 </div>
-
             </div>
         </main>
+        
+        <footer class="bg-white border-t border-gray-200 mt-auto">
+            <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8 text-center text-sm text-gray-500 font-medium">
+                <span data-i18n="footer-text">Bản quyền &copy; thuộc về Thai Corp International (Vietnam) Co., Ltd. Bảo lưu mọi quyền.</span>
+            </div>
+        </footer>
+
     </div>
 
-    <!-- ========================================== -->
-    <!-- 3. SCRIPT LOGIC (IIFE)                     -->
-    <!-- ========================================== -->
     <script>
         function switchTab(tabId) {
             const allBtns = document.querySelectorAll('.tab-btn');
@@ -206,7 +199,6 @@
             let currentUserEmail = "";
             let currentLang = "vi";
 
-            // TỪ ĐIỂN DỊCH THUẬT
             const translations = {
                 vi: {
                     "login-title": "Hệ thống báo cáo",
@@ -232,7 +224,8 @@
                     "greeting-prefix": "Xin chào, ",
                     "err-credentials": "Tài khoản email hoặc mật khẩu không chính xác.",
                     "err-generic": "Có lỗi xảy ra, vui lòng thử lại!",
-                    "btn-loading": "Đang xử lý..."
+                    "btn-loading": "Đang xử lý...",
+                    "footer-text": "Bản quyền © thuộc về Thai Corp International (Vietnam) Co., Ltd. Bảo lưu mọi quyền."
                 },
                 en: {
                     "login-title": "Reporting System",
@@ -258,17 +251,17 @@
                     "greeting-prefix": "Hello, ",
                     "err-credentials": "Invalid email or password.",
                     "err-generic": "An error occurred, please try again!",
-                    "btn-loading": "Processing..."
+                    "btn-loading": "Processing...",
+                    "footer-text": "Copyright © by Thai Corp International (Vietnam) Co., Ltd. All rights reserved."
                 }
             };
 
-            // HÀM CHẠY DỊCH THUẬT
             function updateLanguageTexts() {
                 const elements = document.querySelectorAll('[data-i18n]');
                 elements.forEach(el => {
                     const key = el.getAttribute('data-i18n');
                     if (translations[currentLang][key]) {
-                        el.textContent = translations[currentLang][key];
+                        el.innerHTML = translations[currentLang][key]; // Dùng innerHTML để render ký tự &copy;
                     }
                 });
 
@@ -277,7 +270,6 @@
                 }
             }
 
-            // XỬ LÝ LOGIC CHUYỂN NGÔN NGỮ (VI/EN) DẠNG TOGGLE
             const btnVi = document.getElementById('lang-vi');
             const btnEn = document.getElementById('lang-en');
 
@@ -294,12 +286,12 @@
                     btnVi.className = inactiveClasses;
                 }
                 updateLanguageTexts();
+                fetchGoogleSheetData(); // Tải lại thông báo API để đổi ngôn ngữ (nếu cần)
             }
 
             btnVi.addEventListener('click', () => setLanguage('vi'));
             btnEn.addEventListener('click', () => setLanguage('en'));
             
-            // TẢI THÔNG BÁO TỪ GOOGLE SHEET
             async function fetchGoogleSheetData() {
                 const descElement = document.getElementById('dynamic-sheet-desc');
                 try {
@@ -318,7 +310,6 @@
                 }
             }
 
-            // PHÂN QUYỀN GIAO DIỆN
             function applyUIPermissions(userEmail) {
                 currentUserEmail = userEmail;
                 updateLanguageTexts();
@@ -348,15 +339,12 @@
                 }
             }
 
-            // LẮNG NGHE ĐĂNG NHẬP
             supabaseClient.auth.onAuthStateChange((event, session) => {
                 if (session && session.user) {
                     loginSection.classList.add('hidden-element');
                     loginErrorMsg.classList.add('hidden-element'); 
                     mainPortal.classList.remove('hidden-element');
                     applyUIPermissions(session.user.email);
-                    
-                    fetchGoogleSheetData(); 
                 } else {
                     currentUserEmail = "";
                     loginSection.classList.remove('hidden-element');
