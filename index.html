@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang Chủ Báo Cáo - TCIVN</title>
+    
+    <link rel="icon" type="image/png" href="/faviconTCI.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -65,13 +68,13 @@
                     <p class="mt-2 text-sm text-gray-500 flex-1">Tổng quan tình hình xây dựng và thực thi tuyến bán hàng: cung cấp các chỉ số phục vụ cho quyết định chiến lược sắp tới</p>
                 </a>
 
-                <a href="/https://nguyen842-ai.github.io/Routeproductivities.2026/" id="card-report-2" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-indigo-300 transition cursor-pointer">
+                <a href="https://nguyen842-ai.github.io/Routeproductivities.2026/" id="card-report-2" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-indigo-300 transition cursor-pointer">
                     <div class="text-4xl mb-4">📈</div>
                     <h3 class="text-lg font-bold text-gray-900 group-hover:text-indigo-600">2. Route productivities</h3>
                     <p class="mt-2 text-sm text-gray-500 flex-1">Phân tích chi tiết hiệu suất tuyến theo từng ngày: Cung cấp chi tiết chỉ số theo ngày phục vụ cho mục đích cải thiện tuyến bán hàng</p>
                 </a>
 
-                <a href="/bao-cao-3.html" id="https://nguyen842-ai.github.io/Tracking-route-by-map/" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-indigo-300 transition cursor-pointer">
+                <a href="https://nguyen842-ai.github.io/Tracking-route-by-map/" id="card-report-3" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-indigo-300 transition cursor-pointer">
                     <div class="text-4xl mb-4">🌏</div>
                     <h3 class="text-lg font-bold text-gray-900 group-hover:text-indigo-600">3. Route & Revenue Tracker</h3>
                     <p class="mt-2 text-sm text-gray-500 flex-1">Báo cáo chi tiết ghé thăm khách hàng theo từng tuần: Tuyến đường, lộ trình, vị trí khách hàng và doanh số</p>
@@ -79,7 +82,7 @@
 
                 <a href="https://nguyen842-ai.github.io/Summary-report-wet-market-project.2026/" id="card-report-4" class="group flex flex-col rounded-xl bg-indigo-50 p-6 shadow-sm border border-indigo-100 hover:shadow-md hover:border-indigo-300 transition cursor-pointer">
                     <div class="text-4xl mb-4">🤝</div>
-                    <h3 class="text-lg font-bold text-indigo-900 group-hover:text-indigo-700">4.Summary Wet market project</h3>
+                    <h3 class="text-lg font-bold text-indigo-900 group-hover:text-indigo-700">4. Summary Wet market project</h3>
                     <p class="mt-2 text-sm text-indigo-600 flex-1">Báo cáo chung tình hình dự án tuyến chợ truyền thống: cung cấp các thông tin và chỉ số phục vụ cho quyết định chiến lược sắp tới</p>
                 </a>
 
@@ -88,76 +91,78 @@
     </div>
 
     <script>
-        // CẤU HÌNH SUPABASE
-        const SUPABASE_URL = "https://mrqldgycwovpbmzdeuyz.supabase.co";
-        const SUPABASE_ANON_KEY = "sb_publishable_itZfZBVw7bxE184tGh7x8A_0_r-QB5p";
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        (function() {
+            // Dùng window.supabase để khai báo an toàn
+            const SUPABASE_URL = "https://mrqldgycwovpbmzdeuyz.supabase.co";
+            const SUPABASE_ANON_KEY = "sb_publishable_itZfZBVw7bxE184tGh7x8A_0_r-QB5p";
+            const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Lấy các phần tử DOM
-        const loginSection = document.getElementById('login-section');
-        const mainPortal = document.getElementById('main-portal');
-        const userGreeting = document.getElementById('user-greeting');
-        
-        const card1 = document.getElementById('card-report-1');
-        const card2 = document.getElementById('card-report-2');
-        const card3 = document.getElementById('card-report-3');
-
-        // HÀM ÁP DỤNG QUYỀN TRUY CẬP (GIAO DIỆN)
-        function applyUIPermissions(userEmail) {
-            userGreeting.textContent = `Xin chào, ${userEmail}`;
-
-            if (userEmail === 'guest@tcivn.com') {
-                // Nếu là khách, ẩn các báo cáo nội bộ đi
-                card1.classList.add('hidden-element');
-                card2.classList.add('hidden-element');
-                card3.classList.add('hidden-element');
-            } else {
-                // Nếu là người nhà, đảm bảo hiển thị đủ
-                card1.classList.remove('hidden-element');
-                card2.classList.remove('hidden-element');
-                card3.classList.remove('hidden-element');
-            }
-        }
-
-        // LẮNG NGHE TRẠNG THÁI ĐĂNG NHẬP
-        supabase.auth.onAuthStateChange((event, session) => {
-            if (session && session.user) {
-                // Đã đăng nhập -> Ẩn form login, hiện Trang chủ
-                loginSection.classList.add('hidden-element');
-                mainPortal.classList.remove('hidden-element');
-                applyUIPermissions(session.user.email);
-            } else {
-                // Chưa đăng nhập hoặc vừa đăng xuất -> Hiện form login
-                loginSection.classList.remove('hidden-element');
-                mainPortal.classList.add('hidden-element');
-            }
-        });
-
-        // XỬ LÝ ĐĂNG NHẬP
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const btn = document.getElementById('login-btn');
-
-            const originalText = btn.innerText;
-            btn.innerText = "Đang kiểm tra...";
-            btn.disabled = true;
-
-            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            // Lấy các phần tử DOM
+            const loginSection = document.getElementById('login-section');
+            const mainPortal = document.getElementById('main-portal');
+            const userGreeting = document.getElementById('user-greeting');
             
-            if (error) {
-                alert(`Đăng nhập thất bại: ${error.message}`);
-            }
-            
-            btn.innerText = originalText;
-            btn.disabled = false;
-        });
+            const card1 = document.getElementById('card-report-1');
+            const card2 = document.getElementById('card-report-2');
+            const card3 = document.getElementById('card-report-3');
 
-        // XỬ LÝ ĐĂNG XUẤT
-        document.getElementById('logout-btn').addEventListener('click', async () => {
-            await supabase.auth.signOut();
-        });
+            // HÀM ÁP DỤNG QUYỀN TRUY CẬP (GIAO DIỆN)
+            function applyUIPermissions(userEmail) {
+                userGreeting.textContent = `Xin chào, ${userEmail}`;
+
+                if (userEmail === 'guest@tcivn.com') {
+                    // Nếu là khách, ẩn các báo cáo nội bộ đi
+                    card1.classList.add('hidden-element');
+                    card2.classList.add('hidden-element');
+                    card3.classList.add('hidden-element');
+                } else {
+                    // Nếu là người nhà, đảm bảo hiển thị đủ
+                    card1.classList.remove('hidden-element');
+                    card2.classList.remove('hidden-element');
+                    card3.classList.remove('hidden-element');
+                }
+            }
+
+            // LẮNG NGHE TRẠNG THÁI ĐĂNG NHẬP
+            supabaseClient.auth.onAuthStateChange((event, session) => {
+                if (session && session.user) {
+                    // Đã đăng nhập -> Ẩn form login, hiện Trang chủ
+                    loginSection.classList.add('hidden-element');
+                    mainPortal.classList.remove('hidden-element');
+                    applyUIPermissions(session.user.email);
+                } else {
+                    // Chưa đăng nhập hoặc vừa đăng xuất -> Hiện form login
+                    loginSection.classList.remove('hidden-element');
+                    mainPortal.classList.add('hidden-element');
+                }
+            });
+
+            // XỬ LÝ ĐĂNG NHẬP
+            document.getElementById('login-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const btn = document.getElementById('login-btn');
+
+                const originalText = btn.innerText;
+                btn.innerText = "Đang kiểm tra...";
+                btn.disabled = true;
+
+                const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                
+                if (error) {
+                    alert(`Đăng nhập thất bại: ${error.message}`);
+                }
+                
+                btn.innerText = originalText;
+                btn.disabled = false;
+            });
+
+            // XỬ LÝ ĐĂNG XUẤT
+            document.getElementById('logout-btn').addEventListener('click', async () => {
+                await supabaseClient.auth.signOut();
+            });
+        })(); // Kết thúc IIFE
     </script>
 </body>
 </html>
