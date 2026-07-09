@@ -3,361 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ThaiCorp Reports Hub 2026</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="faviconTCI.png">
-    
+    <title>Hệ Thống Báo Cáo Nội Bộ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <style>
-        /* CẤU HÌNH CƠ BẢN */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Montserrat', sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            background: linear-gradient(105deg, #f4f4f7 55%, #1a1924 55.1%);
-        }
-
-        /* ----- MÀN HÌNH ĐĂNG NHẬP (NỀN TRẮNG CHỮ ĐEN) ----- */
-        #login-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #ffffff;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: #000000;
-            transition: opacity 0.5s ease;
-        }
-        .login-box {
-            background: #ffffff;
-            padding: 40px 50px;
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-            border: 1px solid #e2e8f0;
-            text-align: center;
-            width: 100%;
-            max-width: 400px;
-        }
-        /* Style cho logo trong hộp đăng nhập */
-        .login-box .login-logo {
-            height: 65px;
-            width: auto;
-            margin-bottom: 15px;
-        }
-        .login-box h2 {
-            margin-bottom: 25px;
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: #0d2b47;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-        .login-input {
-            width: 100%;
-            padding: 12px 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            border: 1px solid #cbd5e1;
-            background: #f8fafc;
-            color: #000000;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
-            outline: none;
-        }
-        .login-input:focus { 
-            border-color: #0d4f8d; 
-            background: #ffffff;
-        }
-        .login-btn {
-            width: 100%;
-            padding: 12px;
-            background: #0d4f8d;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            font-family: 'Montserrat', sans-serif;
-        }
-        .login-btn:hover { background: #1755a6; }
-        #login-error {
-            color: #ff4d4d;
-            font-size: 0.9rem;
-            margin-top: 15px;
-            display: none;
-            font-weight: 600;
-        }
-
-        /* LAYOUT CHIA ĐÔI */
-        .container {
-            display: none; 
-            width: 100%;
-            max-width: 1800px;
-            margin: 0; 
-            padding-left: 20px; 
-            flex-grow: 1;
-        }
-
-        /* CỘT TRÁI */
-        .left-content {
-            width: 58%; 
-            padding: 40px 20px 50px 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            gap: 50px;
-            position: relative; 
-        }
-        .left-content::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('background.jfif'); 
-            background-size: cover; background-position: center;
-            opacity: 0.15; z-index: -1; 
-        }
-
-        /* HEADER & TITLE */
-        .header { display: flex; align-items: center; gap: 15px; z-index: 1; justify-content: space-between; padding-right: 20px; }
-        .header-left { display: flex; align-items: center; gap: 15px; }
-        .header img { height: 65px; width: auto; }
-        .company-name { font-size: 1.1rem; font-weight: 800; color: #1755a6; text-transform: uppercase; line-height: 1.3; }
-        
-        .logout-btn {
-            padding: 8px 16px;
-            background-color: #ff4d4d;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-            transition: transform 0.2s, opacity 0.3s;
-            width: fit-content;
-        }
-        .logout-btn:hover { 
-            opacity: 0.9; 
-            transform: scale(1.02);
-        }
-
-        .title-section { display: flex; flex-direction: column; gap: 15px; z-index: 1; }
-        .main-title { font-size: clamp(2.3rem, 3.8vw, 3.5rem); font-weight: 900; color: #0d2b47; line-height: 1.1; text-transform: uppercase; }
-        .main-title span { display: block; font-size: 32px; color: #0d4f8d; margin-top: 10px; font-weight: 900; }
-        .subtitle-box { border-left: 6px solid #646464; padding-left: 20px; margin-top: 10px; }
-        .subtitle { font-size: 1.25rem; font-weight: 700; color: #0d2b47; }
-        .sheet-info { font-size: 1.05rem; color: #646464; margin-top: 8px; font-style: italic; font-weight: 600; }
-        
-        /* Khu vực chứa nút công cụ và đăng xuất */
-        .action-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 18px;
-        }
-        .map-tool-link { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background-color: transparent; color: #0d4f8d; border: 2px solid #0d4f8d; border-radius: 8px; text-decoration: none; font-size: 0.95rem; font-weight: 700; transition: all 0.3s ease; width: fit-content; }
-        .map-tool-link:hover { background-color: #0d4f8d; color: #ffffff; box-shadow: 0 4px 10px rgba(13, 79, 141, 0.3); }
-
-        /* CỘT PHẢI */
-        .right-content { width: 42%; padding: 50px 0; display: flex; flex-direction: column; justify-content: center; gap: 20px; }
-        .card-wrapper { display: block; width: 120%; margin-left: -10%; text-decoration: none; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .report-card { transform: skewX(-15deg); padding: 30px 60px 30px 90px; border-radius: 20px; box-shadow: -12px 12px 30px rgba(0,0,0,0.15); color: white; display: flex; flex-direction: column; justify-content: center; transition: box-shadow 0.4s ease, filter 0.4s ease; }
-        .report-card > div { transform: skewX(15deg); }
-        .card-wrapper:hover { transform: translateX(-30px); }
-        .card-wrapper:hover .report-card { box-shadow: -20px 20px 40px rgba(0,0,0,0.3); filter: brightness(1.1); }
-        .bg-1 { background-color: #0d4f8d; } .bg-2 { background-color: #0d2b47; } .bg-3 { background-color: #3B8686; } .bg-4 { background-color: #79BD9A; } .bg-5 { background-color: #A8D5BA; color: #0d2b47 !important; }
-        .bg-5 h3, .bg-5 p { color: #0d2b47; }
-        .report-card h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .report-card p { font-size: 0.95rem; opacity: 0.9; line-height: 1.5; font-weight: 400; max-width: 85%; }
-
-        /* FOOTER */
-        .site-footer { padding: 20px 40px; font-size: 0.85rem; font-weight: 600; color: rgba(13, 43, 71, 0.7); z-index: 5; text-align: left; }
-
-        @media (max-width: 1024px) {
-            body { background: #f4f4f7; flex-direction: column; }
-            .container { flex-direction: column; padding: 20px; }
-            .left-content { width: 100%; padding: 10px; }
-            .header { flex-direction: column; align-items: flex-start; gap: 20px;}
-            .main-title { white-space: normal; } 
-            .right-content { width: 100%; padding: 20px 0; background: #1a1924; }
-            .card-wrapper { width: 100%; margin-left: 0; }
-            .report-card { transform: none; border-radius: 16px; padding: 30px; }
-            .report-card > div { transform: none; }
-            .card-wrapper:hover { transform: translateY(-10px); }
-            .site-footer { text-align: center; color: #888; }
-        }
+        /* CSS bổ sung để tối ưu giao diện ẩn/hiện */
+        .hidden-report { display: none !important; }
     </style>
 </head>
-<body>
+<body class="bg-gray-100 font-sans antialiased">
 
-    <div id="login-overlay">
-        <div class="login-box">
-            <img src="logo.png" alt="ThaiCorp Logo" class="login-logo">
-            <h2>Please login to continue</h2>
-            <input type="email" id="email-input" class="login-input" placeholder="Email công ty...">
-            <input type="password" id="pass-input" class="login-input" placeholder="Mật khẩu...">
-            <button onclick="handleLogin()" class="login-btn" id="login-btn-text">ĐĂNG NHẬP / LOGIN</button>
-            <p id="login-error">Sai tài khoản hoặc mật khẩu!</p>
+    <div id="login-container" class="flex min-h-screen items-center justify-center px-4">
+        <div class="w-full max-w-md space-y-8 rounded-lg bg-white p-8 shadow-md">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold tracking-tight text-gray-900">Đăng nhập hệ thống</h2>
+                <p class="mt-2 text-sm text-gray-600">Vui lòng dùng tài khoản được cấp để xem báo cáo</p>
+            </div>
+            <form id="login-form" class="mt-8 space-y-6">
+                <div class="space-y-4 rounded-md shadow-sm">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input id="email" type="email" required class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Mật khẩu</label>
+                        <input id="password" type="password" required class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="group relative flex w-full justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        Đăng nhập
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <div class="container" id="main-content">
-        <div class="left-content">
-            <header class="header">
-                <div class="header-left">
-                    <img src="logo.png" alt="ThaiCorp Logo">
-                    <div class="company-name">
-                        Thai Corp International<br>(Vietnam) Co., Ltd.
-                    </div>
-                </div>
-            </header>
+    <div id="dashboard-container" class="hidden flex h-screen bg-gray-200">
+        
+        <div class="flex w-64 flex-col bg-gray-800 text-white">
+            <div class="flex h-16 items-center justify-center bg-gray-900 font-bold text-xl px-4">
+                <span id="user-display" class="text-sm truncate">Đang tải...</span>
+            </div>
+            
+            <nav class="flex-1 space-y-1 px-2 py-4">
+                <button id="menu-report-1" onclick="switchReport(1)" class="w-full text-left flex items-center px-4 py-2 text-sm font-medium rounded-md hover:bg-gray-700">
+                    📊 Báo cáo số 1
+                </button>
+                <button id="menu-report-2" onclick="switchReport(2)" class="w-full text-left flex items-center px-4 py-2 text-sm font-medium rounded-md hover:bg-gray-700">
+                    📊 Báo cáo số 2
+                </button>
+                <button id="menu-report-3" onclick="switchReport(3)" class="w-full text-left flex items-center px-4 py-2 text-sm font-medium rounded-md hover:bg-gray-700">
+                    📊 Báo cáo số 3
+                </button>
+                <button id="menu-report-4" onclick="switchReport(4)" class="w-full text-left flex items-center px-4 py-2 text-sm font-medium rounded-md bg-indigo-600 hover:bg-indigo-700">
+                    📈 Báo cáo số 4 (Đối tác)
+                </button>
+            </nav>
 
-            <div class="title-section">
-                <h1 class="main-title">Internal Reports <span>Summary 2026</span></h1>
-                <div class="subtitle-box">
-                    <p class="subtitle">Prepared by Route To Market Team</p>
-                    <p class="sheet-info" id="api-status">Syncing data from system...</p>
-                    
-                    <div class="action-group">
-                        <a href="https://nguyen842-ai.github.io/Tool-ve-ban-do/" target="_blank" class="map-tool-link" title="Mô tả: Công cụ hỗ trợ vẽ bản đồ trực quan">
-                            📍 Công cụ vẽ bản đồ
-                        </a>
-                        <button onclick="handleLogout()" class="logout-btn">🚪 Đăng xuất</button>
-                    </div>
-                </div>
+            <div class="p-4 border-t border-gray-700">
+                <button id="logout-btn" class="w-full bg-red-600 hover:bg-red-700 text-white text-sm py-2 px-4 rounded-md font-medium transition">
+                    Đăng xuất
+                </button>
             </div>
         </div>
 
-        <div class="right-content">
-            <a href="https://nguyen842-ai.github.io/Productivities-C-level/" target="_blank" class="card-wrapper">
-                <div class="report-card bg-1">
-                    <div>
-                        <h3>1. RTM STRATEGIC DASHBOARD</h3>
-                        <p>Đánh giá Hiệu quả Phân phối, Thực thi Tuyến & Phân khúc Sức mua</p>
+        <div class="flex flex-1 flex-col overflow-hidden">
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+                <div class="h-full rounded-lg border-4 border-dashed border-gray-200 bg-white p-4">
+                    <h1 id="report-title" class="text-2xl font-bold mb-4 text-gray-800">Đang tải báo cáo...</h1>
+                    
+                    <div class="w-full h-[calc(100%-3rem)] bg-gray-50 flex items-center justify-center rounded border">
+                        <div id="report-viewer" class="w-full h-full p-4 overflow-auto text-gray-600">
+                            Chọn một báo cáo từ menu bên trái để xem dữ liệu.
+                        </div>
                     </div>
                 </div>
-            </a>
-            <a href="https://nguyen842-ai.github.io/Routeproductivities.2026/" target="_blank" class="card-wrapper">
-                <div class="report-card bg-2">
-                    <div>
-                        <h3>2. ROUTE PRODUCTIVITIES</h3>
-                        <p>Chi tiết hiệu suất tuyến bán hàng theo ngày của tất cả nhân viên toàn quốc</p>
-                    </div>
-                </div>
-            </a>
-            <a href="https://nguyen842-ai.github.io/Tracking-route-by-map/" target="_blank" class="card-wrapper">
-                <div class="report-card bg-3">
-                    <div>
-                        <h3>3. CUSTOMER VISIT DETAIL</h3>
-                        <p>Theo dõi chi tiết ghé thăm khách hàng của nhân viên: thứ tự và tuyến trên bản đồ thực tế</p>
-                    </div>
-                </div>
-            </a>
-            <a href="https://nguyen842-ai.github.io/Summary-report-wet-market-project.2026/" target="_blank" class="card-wrapper">
-                <div class="report-card bg-4">
-                    <div>
-                        <h3>4. SUMMARY WET MARKET REPORT</h3>
-                        <p>Tổng hợp tiến trình, chiến lược, nhân sự và performance của dự án</p>
-                    </div>
-                </div>
-            </a>
-            <a href="https://nguyen842-ai.github.io/Tracking-tuyen-cho-truyen-thong/" target="_blank" class="card-wrapper">
-                <div class="report-card bg-5">
-                    <div>
-                        <h3>5. ROUTE PRODUCTIVITES - WET MARKET</h3>
-                        <p>Chi tiết hiệu suất tuyến bán hàng theo ngày của nhân viên đặc biệt tuyến chợ truyền thống</p>
-                    </div>
-                </div>
-            </a>
+            </main>
         </div>
     </div>
 
-    <footer class="site-footer">
-        &copy; 2020 Copyright by Thai Corp. All rights reserved.
-    </footer>
-
     <script>
-        (function () {
-            const SUPABASE_URL = 'https://mrqldgycwovpbmzdeuyz.supabase.co';
-            const SUPABASE_ANON_KEY = 'sb_publishable_itZfZBVw7bxE184tGh7x8A_0_r-QB5p';
+        // CẤU HÌNH SUPABASE ĐÃ ĐƯỢC CẬP NHẬT TỰ ĐỘNG
+        const SUPABASE_URL = "https://mrqldgycwovpbmzdeuyz.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_itZfZBVw7bxE184tGh7x8A_0_r-QB5p";
+
+        // Khởi tạo Supabase Client
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // DOM Elements
+        const loginContainer = document.getElementById('login-container');
+        const dashboardContainer = document.getElementById('dashboard-container');
+        const loginForm = document.getElementById('login-form');
+        const userDisplay = document.getElementById('user-display');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        // --- LỚP BẢO MẬT & PHÂN QUYỀN TRÊN FRONTEND ---
+        function applyPermissions(email) {
+            userDisplay.textContent = email;
+
+            if (email === 'guest@tcivn.com') {
+                // 1. Ẩn toàn bộ menu báo cáo 1, 2, 3 đối với tài khoản Guest
+                document.getElementById('menu-report-1').classList.add('hidden-report');
+                document.getElementById('menu-report-2').classList.add('hidden-report');
+                document.getElementById('menu-report-3').classList.add('hidden-report');
+
+                // 2. Ép tài khoản Guest vào thẳng Báo cáo số 4
+                switchReport(4);
+            } else {
+                // Tài khoản nội bộ công ty: Hiển thị đầy đủ menu
+                document.getElementById('menu-report-1').classList.remove('hidden-report');
+                document.getElementById('menu-report-2').classList.remove('hidden-report');
+                document.getElementById('menu-report-3').classList.remove('hidden-report');
+                
+                // Mặc định mở Báo cáo 1 cho Admin/Internal
+                switchReport(1);
+            }
+        }
+
+        // --- HÀM TẢI VÀ CHUYỂN ĐỔI BÁO CÁO ---
+        async function switchReport(reportNumber) {
+            const reportTitle = document.getElementById('report-title');
+            const reportViewer = document.getElementById('report-viewer');
             
-            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            reportTitle.textContent = `Báo cáo số ${reportNumber}`;
+            reportViewer.innerHTML = `<p class="text-blue-500 animate-pulse">Chờ một chút, đang lấy dữ liệu an toàn từ Supabase...</p>`;
 
-            async function checkSession() {
-                const { data: { session } } = await supabase.auth.getSession();
-                if (session) {
-                    document.getElementById('login-overlay').style.display = 'none';
-                    document.getElementById('main-content').style.display = 'flex';
-                    loadSheetData(); 
-                } else {
-                    document.getElementById('login-overlay').style.display = 'flex';
-                    document.getElementById('main-content').style.display = 'none';
-                }
+            // Xóa trạng thái Active của các nút cũ, chuyển sang nút hiện tại
+            for(let i=1; i<=4; i++) {
+                document.getElementById(`menu-report-${i}`).classList.remove('bg-indigo-600');
             }
+            document.getElementById(`menu-report-${reportNumber}`).classList.add('bg-indigo-600');
 
-            async function handleLogin() {
-                const email = document.getElementById('email-input').value;
-                const pass = document.getElementById('pass-input').value;
-                const btn = document.getElementById('login-btn-text');
-                const errorMsg = document.getElementById('login-error');
+            try {
+                // Tải dữ liệu file tương ứng từ bucket 'chotruyenthong'
+                // Ví dụ cấu trúc: bao-cao-1/data.html hoặc bao-cao-4/data.html
+                const fileName = `bao-cao-${reportNumber}/data.html`; 
+                
+                const { data, error } = await supabase.storage
+                    .from('chotruyenthong')
+                    .download(fileName);
 
-                if (!email || !pass) return;
+                if (error) throw error;
 
-                btn.innerText = 'ĐANG XỬ LÝ...';
-                errorMsg.style.display = 'none';
+                // Đọc file blob nhận được và hiển thị lên màn hình
+                const text = await data.text();
+                reportViewer.innerHTML = text;
 
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: pass,
-                });
-
-                if (error) {
-                    btn.innerText = 'ĐĂNG NHẬP / LOGIN';
-                    errorMsg.innerText = 'Sai tài khoản hoặc mật khẩu, hoặc tài khoản đã bị khóa!';
-                    errorMsg.style.display = 'block';
-                } else {
-                    btn.innerText = 'THÀNH CÔNG!';
-                    setTimeout(checkSession, 500);
-                }
+            } catch (err) {
+                console.error(err);
+                reportViewer.innerHTML = `
+                    <div class="text-red-500 font-semibold p-4 bg-red-50 rounded border border-red-200">
+                        ❌ Lỗi: Bạn không có quyền xem báo cáo này hoặc dữ liệu chưa được tải lên hệ thống.
+                    </div>`;
             }
+        }
 
-            async function handleLogout() {
-                await supabase.auth.signOut();
-                window.location.reload();
+        // --- XỬ LÝ SỰ KIỆN AUTH (ĐĂNG NHẬP / ĐĂNG XUẤT) ---
+        
+        // Theo dõi trạng thái đăng nhập
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (session && session.user) {
+                // Đã đăng nhập thành công
+                loginContainer.classList.add('hidden');
+                dashboardContainer.classList.remove('hidden');
+                applyPermissions(session.user.email);
+            } else {
+                // Chưa đăng nhập hoặc đã Đăng xuất
+                loginContainer.classList.remove('hidden');
+                dashboardContainer.classList.add('hidden');
             }
+        });
 
-            checkSession();
+        // Submit form Đăng nhập
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-            function loadSheetData() {
-                const sheetId = '1Xtwk_Y7UGKNw2YC9c4kblae71mHahzr7GqV-sfiie6E';
-                const apiKey = 'AIzaSyC8oIfsPGtSedj73Qky4aasg98xqkrWT5s';
-                const range = 'D!A1'; 
-                const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(range)}?key=${apiKey}`;
-
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        const statusElement = document.getElementById('api-status');
-                        if (data.values && data.values[0]) {
-                            statusElement.innerText = data.values[0][0];
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Lỗi API Sheet:', error);
-                        document.getElementById('api-status').innerText = 'System data is being updated.';
-                    });
+            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) {
+                alert(`Đăng nhập thất bại: ${error.message}`);
             }
+        });
 
-            window.handleLogin = handleLogin;
-            window.handleLogout = handleLogout;
-        })();
+        // Bấm nút Đăng xuất
+        logoutBtn.addEventListener('click', async () => {
+            await supabase.auth.signOut();
+        });
     </script>
 </body>
 </html>
