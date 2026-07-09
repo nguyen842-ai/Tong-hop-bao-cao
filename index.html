@@ -11,15 +11,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .hidden-element { display: none !important; }
-        .tab-active { border-bottom-color: #4f46e5 !important; color: #4f46e5 !important; }
+        /* Đã cập nhật mã màu thương hiệu #0c4da2 cho Tab */
+        .tab-active { border-bottom-color: #0c4da2 !important; color: #0c4da2 !important; }
         .tab-inactive { border-bottom-color: transparent !important; color: #6b7280 !important; }
     </style>
 </head>
 <body class="bg-gray-50 font-sans antialiased text-gray-800">
 
-    <!-- ========================================== -->
-    <!-- 1. GIAO DIỆN ĐĂNG NHẬP -->
-    <!-- ========================================== -->
     <div id="login-section" class="flex min-h-screen items-center justify-center px-4">
         <div class="w-full max-w-md space-y-8 rounded-xl bg-white p-10 shadow-lg border border-gray-100">
             <div class="text-center">
@@ -36,31 +34,31 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Tài khoản Email</label>
-                        <input id="email" type="email" required class="block w-full rounded-md border border-gray-300 px-4 py-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition">
+                        <input id="email" type="email" required class="block w-full rounded-md border border-gray-300 px-4 py-3 shadow-sm focus:border-[#0c4da2] focus:ring-[#0c4da2] transition outline-none">
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Mật khẩu</label>
-                        <input id="password" type="password" required class="block w-full rounded-md border border-gray-300 px-4 py-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition">
+                        <input id="password" type="password" required class="block w-full rounded-md border border-gray-300 px-4 py-3 shadow-sm focus:border-[#0c4da2] focus:ring-[#0c4da2] transition outline-none">
                     </div>
                 </div>
-                <button type="submit" id="login-btn" class="flex w-full justify-center rounded-md bg-indigo-600 px-4 py-3 text-sm font-bold text-white hover:bg-indigo-700 shadow-md transition">
+                <button type="submit" id="login-btn" class="flex w-full justify-center rounded-md bg-[#0c4da2] px-4 py-3 text-sm font-bold text-white hover:bg-[#0a3c82] shadow-md transition">
                     Đăng nhập hệ thống
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 2. TRANG WEB TỔNG (DASHBOARD CÓ TABS)      -->
-    <!-- ========================================== -->
     <div id="main-portal" class="hidden-element min-h-screen flex flex-col">
         
-        <!-- Header -->
         <header class="bg-white shadow-sm border-b border-gray-200">
             <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-                <img src="./logo.png" alt="TCIVN Logo" class="h-10 w-auto object-contain">
+                <div class="flex items-center gap-3">
+                    <img src="./logo.png" alt="TCIVN Logo" class="h-10 w-auto object-contain">
+                    <h1 class="text-lg sm:text-xl font-bold text-[#0c4da2]">Thai Corp International (Vietnam) Co., Ltd.</h1>
+                </div>
+                
                 <div class="flex items-center gap-4">
-                    <span id="user-greeting" class="text-sm font-medium text-gray-600">Xin chào, ...</span>
+                    <span id="user-greeting" class="text-sm font-medium text-gray-600 hidden sm:inline-block">Xin chào, ...</span>
                     <button id="logout-btn" class="rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-red-50 hover:text-red-600 transition">
                         Đăng xuất
                     </button>
@@ -70,15 +68,13 @@
 
         <main class="flex-1 p-6 sm:p-10 mx-auto w-full max-w-7xl">
             
-            <!-- TIÊU ĐỀ HỆ THỐNG VÀ DÒNG CHỮ CHẠY TỪ API GOOGLE SHEET -->
             <div class="mb-8 border-b border-gray-200 pb-6">
-                <h1 class="text-3xl font-black text-gray-900 tracking-tight uppercase">Hệ Thống Báo Cáo Nội Bộ</h1>
-                <p id="dynamic-sheet-desc" class="mt-2 text-sm font-medium text-indigo-600 italic bg-indigo-50 inline-block px-3 py-1 rounded">
+                <h2 class="text-3xl font-black text-gray-900 tracking-tight uppercase">Hệ Thống Báo Cáo Nội Bộ</h2>
+                <p id="dynamic-sheet-desc" class="mt-2 text-sm font-medium text-[#0c4da2] italic bg-[#eef4fa] border border-[#d1e3f5] inline-block px-3 py-1.5 rounded">
                     Đang tải thông báo hệ thống...
                 </p>
             </div>
 
-            <!-- HỆ THỐNG MENU TABS -->
             <div class="border-b border-gray-200 mb-8">
                 <nav class="-mb-px flex space-x-8" aria-label="Tabs">
                     <button id="tab-btn-primary" onclick="switchTab('primary')" class="tab-btn tab-inactive hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-semibold text-base transition">
@@ -93,56 +89,52 @@
                 </nav>
             </div>
 
-            <!-- NỘI DUNG TABS -->
             <div id="tab-contents">
-                <!-- TAB 1: Primary sales report -->
                 <div id="tab-primary" class="tab-content hidden-element">
                     <div class="p-8 text-center bg-white rounded-xl border border-gray-200 border-dashed">
-                        <p class="text-gray-500 italic">Khu vực này hiện chưa có báo cáo.</p>
+                        <p class="text-gray-500 italic">Khu vực này hiện chưa có báo cáo nào được gắn.</p>
                     </div>
                 </div>
 
-                <!-- TAB 2: Secondary sales report (Chứa 5 báo cáo) -->
                 <div id="tab-secondary" class="tab-content">
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        <a href="https://nguyen842-ai.github.io/Productivities-C-level/" id="card-report-1" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-indigo-300 transition cursor-pointer">
+                        <a href="https://nguyen842-ai.github.io/Productivities-C-level/" id="card-report-1" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
                             <div class="text-4xl mb-4">📊</div>
-                            <h3 class="text-lg font-bold text-gray-900 group-hover:text-indigo-600">1. Summary Route to market strategy</h3>
+                            <h3 class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">1. Summary Route to market strategy</h3>
                             <p class="mt-2 text-sm text-gray-500 flex-1">Tổng quan tình hình xây dựng và thực thi tuyến bán hàng: cung cấp các chỉ số phục vụ cho quyết định chiến lược sắp tới</p>
                         </a>
 
-                        <a href="https://nguyen842-ai.github.io/Routeproductivities.2026/" id="card-report-2" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-indigo-300 transition cursor-pointer">
+                        <a href="https://nguyen842-ai.github.io/Routeproductivities.2026/" id="card-report-2" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
                             <div class="text-4xl mb-4">📈</div>
-                            <h3 class="text-lg font-bold text-gray-900 group-hover:text-indigo-600">2. Route productivities</h3>
+                            <h3 class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">2. Route productivities</h3>
                             <p class="mt-2 text-sm text-gray-500 flex-1">Phân tích chi tiết hiệu suất tuyến theo từng ngày: Cung cấp chi tiết chỉ số theo ngày phục vụ cho mục đích cải thiện tuyến bán hàng</p>
                         </a>
 
-                        <a href="https://nguyen842-ai.github.io/Tracking-route-by-map/" id="card-report-3" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-indigo-300 transition cursor-pointer">
+                        <a href="https://nguyen842-ai.github.io/Tracking-route-by-map/" id="card-report-3" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
                             <div class="text-4xl mb-4">🌏</div>
-                            <h3 class="text-lg font-bold text-gray-900 group-hover:text-indigo-600">3. Route & Revenue Tracker</h3>
+                            <h3 class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">3. Route & Revenue Tracker</h3>
                             <p class="mt-2 text-sm text-gray-500 flex-1">Báo cáo chi tiết ghé thăm khách hàng theo từng tuần: Tuyến đường, lộ trình, vị trí khách hàng và doanh số</p>
                         </a>
 
-                        <a href="https://nguyen842-ai.github.io/Summary-report-wet-market-project.2026/" id="card-report-4" class="group flex flex-col rounded-xl bg-indigo-50 p-6 shadow-sm border border-indigo-200 hover:shadow-md hover:border-indigo-400 transition cursor-pointer">
+                        <a href="https://nguyen842-ai.github.io/Summary-report-wet-market-project.2026/" id="card-report-4" class="group flex flex-col rounded-xl bg-[#f5f8fc] p-6 shadow-sm border border-[#d1e3f5] hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
                             <div class="text-4xl mb-4">🤝</div>
-                            <h3 class="text-lg font-bold text-indigo-900 group-hover:text-indigo-700">4. Summary Wet market project</h3>
-                            <p class="mt-2 text-sm text-indigo-600 flex-1">Báo cáo chung tình hình dự án tuyến chợ truyền thống: cung cấp các thông tin và chỉ số phục vụ cho quyết định chiến lược sắp tới</p>
+                            <h3 class="text-lg font-bold text-[#0c4da2] group-hover:text-[#0a3c82]">4. Summary Wet market project</h3>
+                            <p class="mt-2 text-sm text-gray-600 flex-1">Báo cáo chung tình hình dự án tuyến chợ truyền thống: cung cấp các thông tin và chỉ số phục vụ cho quyết định chiến lược sắp tới</p>
                         </a>
                         
-                        <a href="https://nguyen842-ai.github.io/Tracking-tuyen-cho-truyen-thong/" id="card-report-5" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-indigo-300 transition cursor-pointer">
+                        <a href="https://nguyen842-ai.github.io/Tracking-tuyen-cho-truyen-thong/" id="card-report-5" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
                             <div class="text-4xl mb-4">🛒</div>
-                            <h3 class="text-lg font-bold text-gray-900 group-hover:text-indigo-600">5. Wet market productivities</h3>
+                            <h3 class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">5. Wet market productivities</h3>
                             <p class="mt-2 text-sm text-gray-500 flex-1">Phân tích chi tiết hiệu suất tuyến theo từng ngày của tuyến chợ truyền thống: Cung cấp chi tiết chỉ số theo ngày phục vụ cho mục đích cải thiện tuyến bán hàng.</p>
                         </a>
                     </div>
                 </div>
 
-                <!-- TAB 3: Support tool -->
                 <div id="tab-support" class="tab-content hidden-element">
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        <a href="https://nguyen842-ai.github.io/Tool-ve-ban-do/" id="card-tool-1" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-teal-400 transition cursor-pointer">
+                        <a href="https://nguyen842-ai.github.io/Tool-ve-ban-do/" id="card-tool-1" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
                             <div class="text-4xl mb-4">🗺️</div>
-                            <h3 class="text-lg font-bold text-gray-900 group-hover:text-teal-600">1. Tool vẽ bản đồ</h3>
+                            <h3 class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">1. Tool vẽ bản đồ</h3>
                             <p class="mt-2 text-sm text-gray-500 flex-1">Cung cấp bản đồ hành chính Việt Nam cấp 1 (Tỉnh/Thành phố) và cấp 2 (Quận huyện) trước sáp nhập tháng 7/2025. Hỗ trợ tool khoanh vùng, ghim khách hàng key, nhà phân phối.</p>
                         </a>
                     </div>
@@ -152,11 +144,7 @@
         </main>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 3. SCRIPT LOGIC (IIFE)                     -->
-    <!-- ========================================== -->
     <script>
-        // HÀM XỬ LÝ CHUYỂN TAB
         function switchTab(tabId) {
             const allBtns = document.querySelectorAll('.tab-btn');
             allBtns.forEach(btn => {
@@ -196,8 +184,8 @@
             async function fetchGoogleSheetData() {
                 const descElement = document.getElementById('dynamic-sheet-desc');
                 try {
-                    // LƯU Ý: Đổi link dưới đây thành URL ứng dụng Vercel thực tế của bạn
-                    const VERCEL_API_URL = "https://tong-hop-bao-cao.vercel.app/api/sheets";
+                    // Đã tích hợp link Vercel của bạn
+                    const VERCEL_API_URL = "https://tong-hop-bao-cao.vercel.app/api/sheets"; 
                     
                     const response = await fetch(VERCEL_API_URL);
                     const data = await response.json();
@@ -209,7 +197,7 @@
                     }
                 } catch (error) {
                     console.error("Lỗi khi tải dữ liệu Sheets:", error);
-                    descElement.textContent = "Hệ thống đang hoạt động bình thường.";
+                    descElement.textContent = "Hệ thống đang tải thời gian cập nhật...";
                 }
             }
 
@@ -248,7 +236,6 @@
                     mainPortal.classList.remove('hidden-element');
                     applyUIPermissions(session.user.email);
                     
-                    // Gọi hàm tải data từ Sheet ngay sau khi login thành công
                     fetchGoogleSheetData(); 
                 } else {
                     loginSection.classList.remove('hidden-element');
