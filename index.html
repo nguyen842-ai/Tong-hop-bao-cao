@@ -3,192 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TCI Repport hub</title>
+    <title>Trang Chủ Báo Cáo - TCIVN</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* CSS bổ sung để tối ưu giao diện ẩn/hiện */
-        .hidden-report { display: none !important; }
+        /* Class hỗ trợ ẩn phần tử mượt mà */
+        .hidden-element { display: none !important; }
     </style>
 </head>
-<body class="bg-gray-100 font-sans antialiased">
+<body class="bg-gray-50 font-sans antialiased text-gray-800">
 
-    <div id="login-container" class="flex min-h-screen items-center justify-center px-4">
-        <div class="w-full max-w-md space-y-8 rounded-lg bg-white p-8 shadow-md">
+    <div id="login-section" class="flex min-h-screen items-center justify-center px-4">
+        <div class="w-full max-w-md space-y-8 rounded-xl bg-white p-10 shadow-lg border border-gray-100">
             <div class="text-center">
-                <h2 class="text-3xl font-bold tracking-tight text-gray-900">Đăng nhập hệ thống</h2>
-                <p class="mt-2 text-sm text-gray-600">Vui lòng dùng tài khoản được cấp để xem báo cáo</p>
+                <h2 class="text-3xl font-extrabold tracking-tight text-gray-900">Cổng Thông Tin</h2>
+                <p class="mt-2 text-sm text-gray-500">Đăng nhập để truy cập hệ thống báo cáo</p>
             </div>
             <form id="login-form" class="mt-8 space-y-6">
-                <div class="space-y-4 rounded-md shadow-sm">
+                <div class="space-y-4">
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input id="email" type="email" required class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Tài khoản Email</label>
+                        <input id="email" type="email" required class="block w-full rounded-md border border-gray-300 px-4 py-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition">
                     </div>
                     <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700">Mật khẩu</label>
-                        <input id="password" type="password" required class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Mật khẩu</label>
+                        <input id="password" type="password" required class="block w-full rounded-md border border-gray-300 px-4 py-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition">
                     </div>
                 </div>
-                <div>
-                    <button type="submit" class="group relative flex w-full justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        Đăng nhập
-                    </button>
-                </div>
+                <button type="submit" id="login-btn" class="flex w-full justify-center rounded-md bg-indigo-600 px-4 py-3 text-sm font-bold text-white hover:bg-indigo-700 shadow-md transition">
+                    Đăng nhập hệ thống
+                </button>
             </form>
         </div>
     </div>
 
-    <div id="dashboard-container" class="hidden flex h-screen bg-gray-200">
+    <div id="main-portal" class="hidden-element min-h-screen flex flex-col">
         
-        <div class="flex w-64 flex-col bg-gray-800 text-white">
-            <div class="flex h-16 items-center justify-center bg-gray-900 font-bold text-xl px-4">
-                <span id="user-display" class="text-sm truncate">Đang tải...</span>
-            </div>
-            
-            <nav class="flex-1 space-y-1 px-2 py-4">
-                <button id="menu-report-1" onclick="switchReport(1)" class="w-full text-left flex items-center px-4 py-2 text-sm font-medium rounded-md hover:bg-gray-700">
-                    📊 Báo cáo số 1
-                </button>
-                <button id="menu-report-2" onclick="switchReport(2)" class="w-full text-left flex items-center px-4 py-2 text-sm font-medium rounded-md hover:bg-gray-700">
-                    📊 Báo cáo số 2
-                </button>
-                <button id="menu-report-3" onclick="switchReport(3)" class="w-full text-left flex items-center px-4 py-2 text-sm font-medium rounded-md hover:bg-gray-700">
-                    📊 Báo cáo số 3
-                </button>
-                <button id="menu-report-4" onclick="switchReport(4)" class="w-full text-left flex items-center px-4 py-2 text-sm font-medium rounded-md bg-indigo-600 hover:bg-indigo-700">
-                    📈 Báo cáo số 4 (Đối tác)
-                </button>
-            </nav>
-
-            <div class="p-4 border-t border-gray-700">
-                <button id="logout-btn" class="w-full bg-red-600 hover:bg-red-700 text-white text-sm py-2 px-4 rounded-md font-medium transition">
-                    Đăng xuất
-                </button>
-            </div>
-        </div>
-
-        <div class="flex flex-1 flex-col overflow-hidden">
-            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
-                <div class="h-full rounded-lg border-4 border-dashed border-gray-200 bg-white p-4">
-                    <h1 id="report-title" class="text-2xl font-bold mb-4 text-gray-800">Đang tải báo cáo...</h1>
-                    
-                    <div class="w-full h-[calc(100%-3rem)] bg-gray-50 flex items-center justify-center rounded border">
-                        <div id="report-viewer" class="w-full h-full p-4 overflow-auto text-gray-600">
-                            Chọn một báo cáo từ menu bên trái để xem dữ liệu.
-                        </div>
-                    </div>
+        <header class="bg-white shadow-sm border-b border-gray-200">
+            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+                <h1 class="text-xl font-bold text-indigo-600">TCIVN Dashboard</h1>
+                <div class="flex items-center gap-4">
+                    <span id="user-greeting" class="text-sm font-medium text-gray-600">Xin chào, ...</span>
+                    <button id="logout-btn" class="rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-red-50 hover:text-red-600 transition">
+                        Đăng xuất
+                    </button>
                 </div>
-            </main>
-        </div>
+            </div>
+        </header>
+
+        <main class="flex-1 p-6 sm:p-10 mx-auto w-full max-w-7xl">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800">Danh mục báo cáo</h2>
+                <p class="text-gray-500">Vui lòng chọn báo cáo bạn muốn xem bên dưới.</p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                
+                <a href="https://nguyen842-ai.github.io/Productivities-C-level/" id="card-report-1" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-indigo-300 transition cursor-pointer">
+                    <div class="text-4xl mb-4">📊</div>
+                    <h3 class="text-lg font-bold text-gray-900 group-hover:text-indigo-600">1. Summary Route to market strategy</h3>
+                    <p class="mt-2 text-sm text-gray-500 flex-1">Tổng quan tình hình xây dựng và thực thi tuyến bán hàng: cung cấp các chỉ số phục vụ cho quyết định chiến lược sắp tới</p>
+                </a>
+
+                <a href="/https://nguyen842-ai.github.io/Routeproductivities.2026/" id="card-report-2" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-indigo-300 transition cursor-pointer">
+                    <div class="text-4xl mb-4">📈</div>
+                    <h3 class="text-lg font-bold text-gray-900 group-hover:text-indigo-600">2. Route productivities</h3>
+                    <p class="mt-2 text-sm text-gray-500 flex-1">Phân tích chi tiết hiệu suất tuyến theo từng ngày: Cung cấp chi tiết chỉ số theo ngày phục vụ cho mục đích cải thiện tuyến bán hàng</p>
+                </a>
+
+                <a href="/bao-cao-3.html" id="https://nguyen842-ai.github.io/Tracking-route-by-map/" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-indigo-300 transition cursor-pointer">
+                    <div class="text-4xl mb-4">🌏</div>
+                    <h3 class="text-lg font-bold text-gray-900 group-hover:text-indigo-600">3. Route & Revenue Tracker</h3>
+                    <p class="mt-2 text-sm text-gray-500 flex-1">Báo cáo chi tiết ghé thăm khách hàng theo từng tuần: Tuyến đường, lộ trình, vị trí khách hàng và doanh số</p>
+                </a>
+
+                <a href="https://nguyen842-ai.github.io/Summary-report-wet-market-project.2026/" id="card-report-4" class="group flex flex-col rounded-xl bg-indigo-50 p-6 shadow-sm border border-indigo-100 hover:shadow-md hover:border-indigo-300 transition cursor-pointer">
+                    <div class="text-4xl mb-4">🤝</div>
+                    <h3 class="text-lg font-bold text-indigo-900 group-hover:text-indigo-700">4.Summary Wet market project</h3>
+                    <p class="mt-2 text-sm text-indigo-600 flex-1">Báo cáo chung tình hình dự án tuyến chợ truyền thống: cung cấp các thông tin và chỉ số phục vụ cho quyết định chiến lược sắp tới</p>
+                </a>
+
+            </div>
+        </main>
     </div>
 
     <script>
-        // CẤU HÌNH SUPABASE ĐÃ ĐƯỢC CẬP NHẬT TỰ ĐỘNG
+        // CẤU HÌNH SUPABASE
         const SUPABASE_URL = "https://mrqldgycwovpbmzdeuyz.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_itZfZBVw7bxE184tGh7x8A_0_r-QB5p";
-
-        // Khởi tạo Supabase Client
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // DOM Elements
-        const loginContainer = document.getElementById('login-container');
-        const dashboardContainer = document.getElementById('dashboard-container');
-        const loginForm = document.getElementById('login-form');
-        const userDisplay = document.getElementById('user-display');
-        const logoutBtn = document.getElementById('logout-btn');
-
-        // --- LỚP BẢO MẬT & PHÂN QUYỀN TRÊN FRONTEND ---
-        function applyPermissions(email) {
-            userDisplay.textContent = email;
-
-            if (email === 'guest@tcivn.com') {
-                // 1. Ẩn toàn bộ menu báo cáo 1, 2, 3 đối với tài khoản Guest
-                document.getElementById('menu-report-1').classList.add('hidden-report');
-                document.getElementById('menu-report-2').classList.add('hidden-report');
-                document.getElementById('menu-report-3').classList.add('hidden-report');
-
-                // 2. Ép tài khoản Guest vào thẳng Báo cáo số 4
-                switchReport(4);
-            } else {
-                // Tài khoản nội bộ công ty: Hiển thị đầy đủ menu
-                document.getElementById('menu-report-1').classList.remove('hidden-report');
-                document.getElementById('menu-report-2').classList.remove('hidden-report');
-                document.getElementById('menu-report-3').classList.remove('hidden-report');
-                
-                // Mặc định mở Báo cáo 1 cho Admin/Internal
-                switchReport(1);
-            }
-        }
-
-        // --- HÀM TẢI VÀ CHUYỂN ĐỔI BÁO CÁO ---
-        async function switchReport(reportNumber) {
-            const reportTitle = document.getElementById('report-title');
-            const reportViewer = document.getElementById('report-viewer');
-            
-            reportTitle.textContent = `Báo cáo số ${reportNumber}`;
-            reportViewer.innerHTML = `<p class="text-blue-500 animate-pulse">Chờ một chút, đang lấy dữ liệu an toàn từ Supabase...</p>`;
-
-            // Xóa trạng thái Active của các nút cũ, chuyển sang nút hiện tại
-            for(let i=1; i<=4; i++) {
-                document.getElementById(`menu-report-${i}`).classList.remove('bg-indigo-600');
-            }
-            document.getElementById(`menu-report-${reportNumber}`).classList.add('bg-indigo-600');
-
-            try {
-                // Tải dữ liệu file tương ứng từ bucket 'chotruyenthong'
-                // Ví dụ cấu trúc: bao-cao-1/data.html hoặc bao-cao-4/data.html
-                const fileName = `bao-cao-${reportNumber}/data.html`; 
-                
-                const { data, error } = await supabase.storage
-                    .from('chotruyenthong')
-                    .download(fileName);
-
-                if (error) throw error;
-
-                // Đọc file blob nhận được và hiển thị lên màn hình
-                const text = await data.text();
-                reportViewer.innerHTML = text;
-
-            } catch (err) {
-                console.error(err);
-                reportViewer.innerHTML = `
-                    <div class="text-red-500 font-semibold p-4 bg-red-50 rounded border border-red-200">
-                        ❌ Lỗi: Bạn không có quyền xem báo cáo này hoặc dữ liệu chưa được tải lên hệ thống.
-                    </div>`;
-            }
-        }
-
-        // --- XỬ LÝ SỰ KIỆN AUTH (ĐĂNG NHẬP / ĐĂNG XUẤT) ---
+        // Lấy các phần tử DOM
+        const loginSection = document.getElementById('login-section');
+        const mainPortal = document.getElementById('main-portal');
+        const userGreeting = document.getElementById('user-greeting');
         
-        // Theo dõi trạng thái đăng nhập
+        const card1 = document.getElementById('card-report-1');
+        const card2 = document.getElementById('card-report-2');
+        const card3 = document.getElementById('card-report-3');
+
+        // HÀM ÁP DỤNG QUYỀN TRUY CẬP (GIAO DIỆN)
+        function applyUIPermissions(userEmail) {
+            userGreeting.textContent = `Xin chào, ${userEmail}`;
+
+            if (userEmail === 'guest@tcivn.com') {
+                // Nếu là khách, ẩn các báo cáo nội bộ đi
+                card1.classList.add('hidden-element');
+                card2.classList.add('hidden-element');
+                card3.classList.add('hidden-element');
+            } else {
+                // Nếu là người nhà, đảm bảo hiển thị đủ
+                card1.classList.remove('hidden-element');
+                card2.classList.remove('hidden-element');
+                card3.classList.remove('hidden-element');
+            }
+        }
+
+        // LẮNG NGHE TRẠNG THÁI ĐĂNG NHẬP
         supabase.auth.onAuthStateChange((event, session) => {
             if (session && session.user) {
-                // Đã đăng nhập thành công
-                loginContainer.classList.add('hidden');
-                dashboardContainer.classList.remove('hidden');
-                applyPermissions(session.user.email);
+                // Đã đăng nhập -> Ẩn form login, hiện Trang chủ
+                loginSection.classList.add('hidden-element');
+                mainPortal.classList.remove('hidden-element');
+                applyUIPermissions(session.user.email);
             } else {
-                // Chưa đăng nhập hoặc đã Đăng xuất
-                loginContainer.classList.remove('hidden');
-                dashboardContainer.classList.add('hidden');
+                // Chưa đăng nhập hoặc vừa đăng xuất -> Hiện form login
+                loginSection.classList.remove('hidden-element');
+                mainPortal.classList.add('hidden-element');
             }
         });
 
-        // Submit form Đăng nhập
-        loginForm.addEventListener('submit', async (e) => {
+        // XỬ LÝ ĐĂNG NHẬP
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const btn = document.getElementById('login-btn');
+
+            const originalText = btn.innerText;
+            btn.innerText = "Đang kiểm tra...";
+            btn.disabled = true;
 
             const { error } = await supabase.auth.signInWithPassword({ email, password });
+            
             if (error) {
                 alert(`Đăng nhập thất bại: ${error.message}`);
             }
+            
+            btn.innerText = originalText;
+            btn.disabled = false;
         });
 
-        // Bấm nút Đăng xuất
-        logoutBtn.addEventListener('click', async () => {
+        // XỬ LÝ ĐĂNG XUẤT
+        document.getElementById('logout-btn').addEventListener('click', async () => {
             await supabase.auth.signOut();
         });
     </script>
