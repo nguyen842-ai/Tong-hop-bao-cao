@@ -147,6 +147,12 @@
                             <h3 data-i18n="tool1-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">1. Tool vẽ bản đồ</h3>
                             <p data-i18n="tool1-desc" class="mt-2 text-sm text-gray-500 flex-1">Cung cấp bản đồ hành chính Việt Nam cấp 1 (Tỉnh/Thành phố) và cấp 2 (Quận huyện) trước sáp nhập tháng 7/2025. Hỗ trợ tool khoanh vùng, ghim khách hàng key, nhà phân phối.</p>
                         </a>
+                        <!-- Thêm tool mới ở đây -->
+                        <a href="https://nguyen842-ai.github.io/Tool-toi-uu-tuyen/" id="card-tool-2" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
+                            <div class="text-4xl mb-4">🤖</div>
+                            <h3 data-i18n="tool2-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">2. Tool kiểm tra và tối ưu hóa tuyến bán hàng</h3>
+                            <p data-i18n="tool2-desc" class="mt-2 text-sm text-gray-500 flex-1">Kiểm tra chi tiết tính hợp lệ của tuyến bán hàng, tối ưu tuyến bán hàng bằng trợ lý AI.</p>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -192,6 +198,7 @@
             const card3 = document.getElementById('card-report-3');
             const card5 = document.getElementById('card-report-5');
             const cardTool1 = document.getElementById('card-tool-1');
+            const cardTool2 = document.getElementById('card-tool-2'); // Đã thêm biến này
 
             const tabBtnPrimary = document.getElementById('tab-btn-primary');
             const tabBtnSupport = document.getElementById('tab-btn-support');
@@ -221,6 +228,8 @@
                     "rep5-desc": "Phân tích chi tiết hiệu suất tuyến theo từng ngày của tuyến chợ truyền thống: Cung cấp chi tiết chỉ số theo ngày phục vụ cho mục đích cải thiện tuyến bán hàng.",
                     "tool1-title": "1. Tool vẽ bản đồ",
                     "tool1-desc": "Cung cấp bản đồ hành chính Việt Nam cấp 1 (Tỉnh/Thành phố) và cấp 2 (Quận huyện) trước sáp nhập tháng 7/2025. Hỗ trợ tool khoanh vùng, ghim khách hàng key, nhà phân phối.",
+                    "tool2-title": "2. Tool kiểm tra và tối ưu hóa tuyến bán hàng", // Đã thêm bản dịch tiếng Việt
+                    "tool2-desc": "Kiểm tra chi tiết tính hợp lệ của tuyến bán hàng, tối ưu tuyến bán hàng bằng trợ lý AI.",
                     "greeting-prefix": "Xin chào, ",
                     "err-credentials": "Tài khoản email hoặc mật khẩu không chính xác.",
                     "err-generic": "Có lỗi xảy ra, vui lòng thử lại!",
@@ -248,6 +257,8 @@
                     "rep5-desc": "Detailed daily route productivity analysis for wet markets: Providing daily metrics for route improvement.",
                     "tool1-title": "1. Mapping Tool",
                     "tool1-desc": "Provides administrative maps of Vietnam at level 1 (Provinces/Cities) and level 2 (Districts) prior to the July 2025 merger. Supports zoning, pinning key customers and distributors.",
+                    "tool2-title": "2. Route Inspection & Optimization Tool", // Đã thêm bản dịch tiếng Anh
+                    "tool2-desc": "Detailed validation of sales routes, optimizing routes using an AI assistant.",
                     "greeting-prefix": "Hello, ",
                     "err-credentials": "Invalid email or password.",
                     "err-generic": "An error occurred, please try again!",
@@ -261,7 +272,7 @@
                 elements.forEach(el => {
                     const key = el.getAttribute('data-i18n');
                     if (translations[currentLang][key]) {
-                        el.innerHTML = translations[currentLang][key]; // Dùng innerHTML để render ký tự &copy;
+                        el.innerHTML = translations[currentLang][key];
                     }
                 });
 
@@ -286,7 +297,7 @@
                     btnVi.className = inactiveClasses;
                 }
                 updateLanguageTexts();
-                fetchGoogleSheetData(); // Tải lại thông báo API để đổi ngôn ngữ (nếu cần)
+                fetchGoogleSheetData();
             }
 
             btnVi.addEventListener('click', () => setLanguage('vi'));
@@ -320,6 +331,7 @@
                     card3.classList.add('hidden-element');
                     card5.classList.add('hidden-element');
                     cardTool1.classList.add('hidden-element');
+                    cardTool2.classList.add('hidden-element'); // Ẩn nếu là guest
 
                     tabBtnPrimary.classList.add('hidden-element');
                     tabBtnSupport.classList.add('hidden-element');
@@ -331,7 +343,8 @@
                     card3.classList.remove('hidden-element');
                     card5.classList.remove('hidden-element');
                     cardTool1.classList.remove('hidden-element');
-
+                    cardTool2.classList.remove('hidden-element'); // Hiện nếu là user thường/admin
+                    
                     tabBtnPrimary.classList.remove('hidden-element');
                     tabBtnSupport.classList.remove('hidden-element');
                     
