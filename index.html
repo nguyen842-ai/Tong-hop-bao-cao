@@ -126,16 +126,23 @@
                             <p data-i18n="rep3-desc" class="mt-2 text-sm text-gray-500 flex-1">Báo cáo chi tiết ghé thăm khách hàng theo từng tuần: Tuyến đường, lộ trình, vị trí khách hàng và doanh số</p>
                         </a>
 
-                        <a href="https://nguyen842-ai.github.io/Summary-report-wet-market-project.2026/" id="card-report-4" class="group flex flex-col rounded-xl bg-[#f5f8fc] p-6 shadow-sm border border-[#d1e3f5] hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
+                        <!-- Đã bổ sung Báo cáo Coverage Report vào vị trí số 4 -->
+                        <a href="https://nguyen842-ai.github.io/coverage-report/" id="card-report-4" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
+                            <div class="text-4xl mb-4">📍</div>
+                            <h3 data-i18n="rep4-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">4. Coverage Report</h3>
+                            <p data-i18n="rep4-desc" class="mt-2 text-sm text-gray-500 flex-1">Độ bao phủ theo khu vực địa lý hành chính Việt Nam trước sáp nhập tháng 07/2025.</p>
+                        </a>
+
+                        <a href="https://nguyen842-ai.github.io/Summary-report-wet-market-project.2026/" id="card-report-5" class="group flex flex-col rounded-xl bg-[#f5f8fc] p-6 shadow-sm border border-[#d1e3f5] hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
                             <div class="text-4xl mb-4">🤝</div>
-                            <h3 data-i18n="rep4-title" class="text-lg font-bold text-[#0c4da2] group-hover:text-[#0a3c82]">4. Summary Wet market project</h3>
-                            <p data-i18n="rep4-desc" class="mt-2 text-sm text-gray-600 flex-1">Báo cáo chung tình hình dự án tuyến chợ truyền thống: cung cấp các thông tin và chỉ số phục vụ cho quyết định chiến lược sắp tới</p>
+                            <h3 data-i18n="rep5-title" class="text-lg font-bold text-[#0c4da2] group-hover:text-[#0a3c82]">5. Summary Wet market project</h3>
+                            <p data-i18n="rep5-desc" class="mt-2 text-sm text-gray-600 flex-1">Báo cáo chung tình hình dự án tuyến chợ truyền thống: cung cấp các thông tin và chỉ số phục vụ cho quyết định chiến lược sắp tới</p>
                         </a>
                         
-                        <a href="https://nguyen842-ai.github.io/Tracking-tuyen-cho-truyen-thong/" id="card-report-5" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
+                        <a href="https://nguyen842-ai.github.io/Tracking-tuyen-cho-truyen-thong/" id="card-report-6" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
                             <div class="text-4xl mb-4">🏘️</div>
-                            <h3 data-i18n="rep5-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">5. Wet market productivities</h3>
-                            <p data-i18n="rep5-desc" class="mt-2 text-sm text-gray-500 flex-1">Phân tích chi tiết hiệu suất tuyến theo từng ngày của tuyến chợ truyền thống: Cung cấp chi tiết chỉ số theo ngày phục vụ cho mục đích cải thiện tuyến bán hàng.</p>
+                            <h3 data-i18n="rep6-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">6. Wet market productivities</h3>
+                            <p data-i18n="rep6-desc" class="mt-2 text-sm text-gray-500 flex-1">Phân tích chi tiết hiệu suất tuyến theo từng ngày của tuyến chợ truyền thống: Cung cấp chi tiết chỉ số theo ngày phục vụ cho mục đích cải thiện tuyến bán hàng.</p>
                         </a>
                     </div>
                 </div>
@@ -154,7 +161,6 @@
                             <p data-i18n="tool2-desc" class="mt-2 text-sm text-gray-500 flex-1">Kiểm tra chi tiết tính hợp lệ của tuyến bán hàng, tối ưu tuyến bán hàng bằng trợ lý AI.</p>
                         </a>
 
-                        <!-- Đã bổ sung Tool 3 vào đây -->
                         <a href="https://nguyen842-ai.github.io/Tool-xu-li-dskh/" id="card-tool-3" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
                             <div class="text-4xl mb-4">🏛️</div>
                             <h3 data-i18n="tool3-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">3. Tool kiểm tra đơn vị hành chính Việt Nam các cấp trước sáp nhập</h3>
@@ -203,10 +209,13 @@
             const card1 = document.getElementById('card-report-1');
             const card2 = document.getElementById('card-report-2');
             const card3 = document.getElementById('card-report-3');
+            const card4 = document.getElementById('card-report-4'); // Card mới thêm
             const card5 = document.getElementById('card-report-5');
+            const card6 = document.getElementById('card-report-6'); // Card mới đổi số 5 thành 6
+            
             const cardTool1 = document.getElementById('card-tool-1');
             const cardTool2 = document.getElementById('card-tool-2');
-            const cardTool3 = document.getElementById('card-tool-3'); // Khai báo card Tool 3
+            const cardTool3 = document.getElementById('card-tool-3');
 
             const tabBtnPrimary = document.getElementById('tab-btn-primary');
             const tabBtnSupport = document.getElementById('tab-btn-support');
@@ -230,16 +239,18 @@
                     "rep2-desc": "Phân tích chi tiết hiệu suất tuyến theo từng ngày: Cung cấp chi tiết chỉ số theo ngày phục vụ cho mục đích cải thiện tuyến bán hàng",
                     "rep3-title": "3. Route & Revenue Tracker",
                     "rep3-desc": "Báo cáo chi tiết ghé thăm khách hàng theo từng tuần: Tuyến đường, lộ trình, vị trí khách hàng và doanh số",
-                    "rep4-title": "4. Summary Wet market project",
-                    "rep4-desc": "Báo cáo chung tình hình dự án tuyến chợ truyền thống: cung cấp các thông tin và chỉ số phục vụ cho quyết định chiến lược sắp tới",
-                    "rep5-title": "5. Wet market productivities",
-                    "rep5-desc": "Phân tích chi tiết hiệu suất tuyến theo từng ngày của tuyến chợ truyền thống: Cung cấp chi tiết chỉ số theo ngày phục vụ cho mục đích cải thiện tuyến bán hàng.",
+                    "rep4-title": "4. Coverage Report",
+                    "rep4-desc": "Độ bao phủ theo khu vực địa lý hành chính Việt Nam trước sáp nhập tháng 07/2025.",
+                    "rep5-title": "5. Summary Wet market project",
+                    "rep5-desc": "Báo cáo chung tình hình dự án tuyến chợ truyền thống: cung cấp các thông tin và chỉ số phục vụ cho quyết định chiến lược sắp tới",
+                    "rep6-title": "6. Wet market productivities",
+                    "rep6-desc": "Phân tích chi tiết hiệu suất tuyến theo từng ngày của tuyến chợ truyền thống: Cung cấp chi tiết chỉ số theo ngày phục vụ cho mục đích cải thiện tuyến bán hàng.",
                     "tool1-title": "1. Tool vẽ bản đồ",
                     "tool1-desc": "Cung cấp bản đồ hành chính Việt Nam cấp 1 (Tỉnh/Thành phố) và cấp 2 (Quận huyện) trước sáp nhập tháng 7/2025. Hỗ trợ tool khoanh vùng, ghim khách hàng key, nhà phân phối.",
                     "tool2-title": "2. Tool kiểm tra và tối ưu hóa tuyến bán hàng",
                     "tool2-desc": "Kiểm tra chi tiết tính hợp lệ của tuyến bán hàng, tối ưu tuyến bán hàng bằng trợ lý AI.",
-                    "tool3-title": "3. Tool kiểm tra đơn vị hành chính Việt Nam các cấp trước sáp nhập", // Thêm dịch vụ cho Tool 3
-                    "tool3-desc": "Kiểm tra đơn vị hành chính của khách hàng đến cấp phường xã phục vụ cho việc xếp tuyến theo khu vực", // Thêm dịch vụ cho Tool 3
+                    "tool3-title": "3. Tool kiểm tra đơn vị hành chính Việt Nam các cấp trước sáp nhập",
+                    "tool3-desc": "Kiểm tra đơn vị hành chính của khách hàng đến cấp phường xã phục vụ cho việc xếp tuyến theo khu vực",
                     "greeting-prefix": "Xin chào, ",
                     "err-credentials": "Tài khoản email hoặc mật khẩu không chính xác.",
                     "err-generic": "Có lỗi xảy ra, vui lòng thử lại!",
@@ -261,16 +272,18 @@
                     "rep2-desc": "Detailed daily route productivity analysis: Providing daily metrics for route improvement purposes.",
                     "rep3-title": "3. Route & Revenue Tracker",
                     "rep3-desc": "Detailed weekly customer visit report: Routes, itineraries, customer locations, and sales tracking.",
-                    "rep4-title": "4. Summary Wet market project",
-                    "rep4-desc": "General report on wet market project status: providing information and metrics for upcoming strategic decisions.",
-                    "rep5-title": "5. Wet market productivities",
-                    "rep5-desc": "Detailed daily route productivity analysis for wet markets: Providing daily metrics for route improvement.",
+                    "rep4-title": "4. Coverage Report",
+                    "rep4-desc": "Coverage by Vietnam's administrative geographical areas prior to the July 2025 merger.",
+                    "rep5-title": "5. Summary Wet market project",
+                    "rep5-desc": "General report on wet market project status: providing information and metrics for upcoming strategic decisions.",
+                    "rep6-title": "6. Wet market productivities",
+                    "rep6-desc": "Detailed daily route productivity analysis for wet markets: Providing daily metrics for route improvement.",
                     "tool1-title": "1. Mapping Tool",
                     "tool1-desc": "Provides administrative maps of Vietnam at level 1 (Provinces/Cities) and level 2 (Districts) prior to the July 2025 merger. Supports zoning, pinning key customers and distributors.",
                     "tool2-title": "2. Route Inspection & Optimization Tool",
                     "tool2-desc": "Detailed validation of sales routes, optimizing routes using an AI assistant.",
-                    "tool3-title": "3. Administrative Units Checker Tool", // Thêm dịch vụ cho Tool 3
-                    "tool3-desc": "Check customer administrative divisions down to the ward/commune level for regional route planning.", // Thêm dịch vụ cho Tool 3
+                    "tool3-title": "3. Administrative Units Checker Tool",
+                    "tool3-desc": "Check customer administrative divisions down to the ward/commune level for regional route planning.",
                     "greeting-prefix": "Hello, ",
                     "err-credentials": "Invalid email or password.",
                     "err-generic": "An error occurred, please try again!",
@@ -341,23 +354,29 @@
                     card1.classList.add('hidden-element');
                     card2.classList.add('hidden-element');
                     card3.classList.add('hidden-element');
-                    card5.classList.add('hidden-element');
+                    card4.classList.add('hidden-element');
+                    card6.classList.add('hidden-element');
+                    
                     cardTool1.classList.add('hidden-element');
                     cardTool2.classList.add('hidden-element');
-                    cardTool3.classList.add('hidden-element'); // Ẩn tool 3 đối với khách
+                    cardTool3.classList.add('hidden-element');
 
                     tabBtnPrimary.classList.add('hidden-element');
                     tabBtnSupport.classList.add('hidden-element');
 
+                    // card5 (Summary Wet market project) vẫn hiển thị theo cấu hình cũ
                     switchTab('secondary');
                 } else {
                     card1.classList.remove('hidden-element');
                     card2.classList.remove('hidden-element');
                     card3.classList.remove('hidden-element');
+                    card4.classList.remove('hidden-element');
                     card5.classList.remove('hidden-element');
+                    card6.classList.remove('hidden-element');
+                    
                     cardTool1.classList.remove('hidden-element');
                     cardTool2.classList.remove('hidden-element');
-                    cardTool3.classList.remove('hidden-element'); // Hiện tool 3 đối với tài khoản cấp quyền
+                    cardTool3.classList.remove('hidden-element');
                     
                     tabBtnPrimary.classList.remove('hidden-element');
                     tabBtnSupport.classList.remove('hidden-element');
