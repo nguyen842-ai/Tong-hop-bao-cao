@@ -81,7 +81,7 @@
                 <div class="pb-4 lg:pb-6">
                     <h2 data-i18n="main-title" class="text-3xl font-black text-gray-900 tracking-tight uppercase">Hệ Thống Báo Cáo Nội Bộ</h2>
                     <p id="dynamic-sheet-desc" class="mt-2 text-sm font-medium text-[#0c4da2] italic bg-[#eef4fa] border border-[#d1e3f5] inline-block px-3 py-1.5 rounded">
-                        Đang kiểm tra ngày cập nhật...
+                        Đang tải thông báo hệ thống...
                     </p>
                 </div>
 
@@ -100,6 +100,7 @@
 
             <div id="tab-contents">
                 
+                <!-- Cập nhật nội dung tab Primary -->
                 <div id="tab-primary" class="tab-content hidden-element">
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         <a href="https://nguyen842-ai.github.io/Performance-sales-team/" id="card-primary-1" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
@@ -348,7 +349,6 @@
                     btnVi.className = inactiveClasses;
                 }
                 updateLanguageTexts();
-                fetchGoogleSheetData();
             }
 
             btnVi.addEventListener('click', () => setLanguage('vi'));
@@ -357,7 +357,7 @@
             async function fetchGoogleSheetData() {
                 const descElement = document.getElementById('dynamic-sheet-desc');
                 try {
-                    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbx4l43aiZ-hwX1f5eGP9ctPl1hUcSfzixwSjFSsoMSyk5SXL4S0zw7g8sbbfPYAKObH2Q/exec"; 
+                    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxAQTGjMeMrttvBEg1WzxPZHSeOznzZ4h8c95OdxYGSUS7cJiZ7iVxKUfDEddCfrsi9_Q/exec"; 
                     const response = await fetch(GAS_API_URL);
                     const data = await response.json();
                     
@@ -460,6 +460,10 @@
                 document.getElementById('email').value = '';
                 document.getElementById('password').value = '';
             });
+
+            // GỌI HÀM LẤY DỮ LIỆU TỰ ĐỘNG KHI VỪA VÀO TRANG MÀ KHÔNG CẦN BẤM NÚT ĐỔI NGÔN NGỮ
+            fetchGoogleSheetData();
+
         })(); 
     </script>
 </body>
