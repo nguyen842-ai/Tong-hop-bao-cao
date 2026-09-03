@@ -100,7 +100,6 @@
 
             <div id="tab-contents">
                 
-                <!-- Cập nhật nội dung tab Primary -->
                 <div id="tab-primary" class="tab-content hidden-element">
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         <a href="https://nguyen842-ai.github.io/Performance-sales-team/" id="card-primary-1" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
@@ -358,8 +357,8 @@
             async function fetchGoogleSheetData() {
                 const descElement = document.getElementById('dynamic-sheet-desc');
                 try {
-                    const VERCEL_API_URL = "https://tong-hop-bao-cao.vercel.app/api/sheets"; 
-                    const response = await fetch(VERCEL_API_URL);
+                    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxAQTGjMeMrttvBEg1WzxPZHSeOznzZ4h8c95OdxYGSUS7cJiZ7iVxKUfDEddCfrsi9_Q/exec"; 
+                    const response = await fetch(GAS_API_URL);
                     const data = await response.json();
                     
                     if (data.text) {
