@@ -100,9 +100,14 @@
 
             <div id="tab-contents">
                 
+                <!-- Cập nhật nội dung tab Primary -->
                 <div id="tab-primary" class="tab-content hidden-element">
-                    <div class="p-8 text-center bg-white rounded-xl border border-gray-200 border-dashed">
-                        <p data-i18n="empty-primary" class="text-gray-500 italic">Khu vực này hiện chưa có báo cáo nào được gắn.</p>
+                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        <a href="https://nguyen842-ai.github.io/Performance-sales-team/" id="card-primary-1" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
+                            <div class="text-4xl mb-4">🏆</div>
+                            <h3 data-i18n="prim1-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">1. Summary Performance sales team</h3>
+                            <p data-i18n="prim1-desc" class="mt-2 text-sm text-gray-500 flex-1">Tổng hợp target, actual performance sell in- sell out của Sales team theo khách hàng và doanh số.</p>
+                        </a>
                     </div>
                 </div>
 
@@ -154,7 +159,6 @@
                             <p data-i18n="tool1-desc" class="mt-2 text-sm text-gray-500 flex-1">Cung cấp bản đồ hành chính Việt Nam cấp 1 (Tỉnh/Thành phố) và cấp 2 (Quận huyện) trước sáp nhập tháng 7/2025. Hỗ trợ tool khoanh vùng, ghim khách hàng key, nhà phân phối.</p>
                         </a>
                         
-                        <!-- Box Tool 2 chứa 2 box nhỏ bên trong -->
                         <div id="card-tool-2" class="flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition">
                             <a href="https://nguyen842-ai.github.io/Tool-toi-uu-tuyen/" class="group flex flex-col flex-1 cursor-pointer mb-5">
                                 <div class="text-4xl mb-4">⚙️</div>
@@ -162,14 +166,11 @@
                                 <p data-i18n="tool2-desc" class="mt-2 text-sm text-gray-500 flex-1">Kiểm tra chi tiết tính hợp lệ của tuyến bán hàng, tối ưu tuyến bán hàng bằng trợ lý AI.</p>
                             </a>
                             
-                            <!-- Cụm nút con bên trong (đáy box) -->
                             <div class="mt-auto flex flex-col gap-2.5">
-                                <!-- Nút 1: Đánh Giá Hiệu Quả -->
                                 <a href="https://nguyen842-ai.github.io/In-depth-Evaluation-route/" class="block w-full rounded-md bg-[#0c4da2] px-4 py-2 text-center shadow-sm hover:bg-[#0a3c82] transition cursor-pointer">
                                     <span data-i18n="tool-new-title" class="text-sm font-bold text-white tracking-wide">Đánh Giá Hiệu Quả & Năng Suất Tuyến</span>
                                 </a>
                                 
-                                <!-- Nút 2: Hướng dẫn sử dụng (Link Youtube) -->
                                 <a href="https://www.youtube.com/watch?v=Agd__MAJTPA" target="_blank" class="flex items-center justify-center gap-2 w-full rounded-md bg-white border border-[#0c4da2] px-4 py-1.5 text-center shadow-sm hover:bg-[#f5f8fc] transition cursor-pointer">
                                     <span class="text-red-600 text-sm">▶</span>
                                     <span data-i18n="tool-guide-title" class="text-sm font-bold text-[#0c4da2] tracking-wide">Hướng dẫn sử dụng tool</span>
@@ -222,6 +223,8 @@
             const loginErrorMsg = document.getElementById('login-error-msg');
             const loginErrorText = document.getElementById('login-error-text');
             
+            const cardPrimary1 = document.getElementById('card-primary-1');
+            
             const card1 = document.getElementById('card-report-1');
             const card2 = document.getElementById('card-report-2');
             const card3 = document.getElementById('card-report-3');
@@ -230,7 +233,7 @@
             const card6 = document.getElementById('card-report-6'); 
             
             const cardTool1 = document.getElementById('card-tool-1');
-            const cardTool2 = document.getElementById('card-tool-2'); // Bản thân box này giờ chứa các tool con
+            const cardTool2 = document.getElementById('card-tool-2'); 
             const cardTool3 = document.getElementById('card-tool-3');
 
             const tabBtnPrimary = document.getElementById('tab-btn-primary');
@@ -249,6 +252,8 @@
                     "logout-btn": "Đăng xuất",
                     "main-title": "Hệ Thống Báo Cáo Nội Bộ",
                     "empty-primary": "Đang cập nhật...",
+                    "prim1-title": "1. Summary Performance sales team",
+                    "prim1-desc": "Tổng hợp target, actual performance sell in- sell out của Sales team theo khách hàng và doanh số.",
                     "rep1-title": "1. Summary Route to market strategy",
                     "rep1-desc": "Tổng quan tình hình xây dựng và thực thi tuyến bán hàng: cung cấp các chỉ số phục vụ cho quyết định chiến lược sắp tới",
                     "rep2-title": "2. Route productivities",
@@ -284,6 +289,8 @@
                     "logout-btn": "Logout",
                     "main-title": "Internal Reporting System",
                     "empty-primary": "Processing...",
+                    "prim1-title": "1. Summary Performance sales team",
+                    "prim1-desc": "Summary of target, actual sell-in and sell-out performance of the Sales team by customer and revenue.",
                     "rep1-title": "1. Summary Route to market strategy",
                     "rep1-desc": "Overview of route to market building and execution: providing metrics for upcoming strategic decisions.",
                     "rep2-title": "2. Route productivities",
@@ -371,6 +378,8 @@
                 updateLanguageTexts();
 
                 if (userEmail === 'guest@tcivn.com') {
+                    if (cardPrimary1) cardPrimary1.classList.add('hidden-element');
+
                     card1.classList.add('hidden-element');
                     card2.classList.add('hidden-element');
                     card3.classList.add('hidden-element');
@@ -386,6 +395,8 @@
 
                     switchTab('secondary');
                 } else {
+                    if (cardPrimary1) cardPrimary1.classList.remove('hidden-element');
+
                     card1.classList.remove('hidden-element');
                     card2.classList.remove('hidden-element');
                     card3.classList.remove('hidden-element');
