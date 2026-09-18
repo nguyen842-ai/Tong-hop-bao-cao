@@ -92,6 +92,9 @@
                     <button id="tab-btn-secondary" onclick="switchTab('secondary')" class="tab-btn tab-active whitespace-nowrap py-4 px-1 border-b-2 font-semibold text-base transition">
                         Secondary sales report
                     </button>
+                    <button id="tab-btn-display" onclick="switchTab('display')" class="tab-btn tab-inactive hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-semibold text-base transition">
+                        <span data-i18n="tab-display">Display process</span>
+                    </button>
                     <button id="tab-btn-support" onclick="switchTab('support')" class="tab-btn tab-inactive hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-semibold text-base transition">
                         Support tool
                     </button>
@@ -148,6 +151,17 @@
                             <h3 data-i18n="rep6-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">6. Wet market productivities</h3>
                             <p data-i18n="rep6-desc" class="mt-2 text-sm text-gray-500 flex-1">Phân tích chi tiết hiệu suất tuyến theo từng ngày của tuyến chợ truyền thống: Cung cấp chi tiết chỉ số theo ngày phục vụ cho mục đích cải thiện tuyến bán hàng.</p>
                         </a>
+                    </div>
+                </div>
+
+                <div id="tab-display" class="tab-content hidden-element">
+                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        <a href="https://nguyen842-ai.github.io/Summary_Display/" id="card-display-1" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
+                            <div class="text-4xl mb-4">🏪</div>
+                            <h3 data-i18n="disp1-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">1. Display process — TT Channel</h3>
+                            <p data-i18n="disp1-desc" class="mt-2 text-sm text-gray-500 flex-1">Quy trình trưng bày kênh TT: tiêu chuẩn POSM, trả thưởng, kế hoạch theo NPP và form mẫu.</p>
+                        </a>
+                        <!-- Thêm card web Display mới bên dưới khi có -->
                     </div>
                 </div>
 
@@ -266,6 +280,9 @@
                     "rep5-desc": "Báo cáo chung tình hình dự án tuyến chợ truyền thống: cung cấp các thông tin và chỉ số phục vụ cho quyết định chiến lược sắp tới",
                     "rep6-title": "6. Wet market productivities",
                     "rep6-desc": "Phân tích chi tiết hiệu suất tuyến theo từng ngày của tuyến chợ truyền thống: Cung cấp chi tiết chỉ số theo ngày phục vụ cho mục đích cải thiện tuyến bán hàng.",
+                    "tab-display": "Display process",
+                    "disp1-title": "1. Display process — TT Channel",
+                    "disp1-desc": "Quy trình trưng bày kênh TT: tiêu chuẩn POSM, trả thưởng, kế hoạch theo NPP và form mẫu.",
                     "tool1-title": "1. Tool vẽ bản đồ",
                     "tool1-desc": "Cung cấp bản đồ hành chính Việt Nam cấp 1 (Tỉnh/Thành phố) và cấp 2 (Quận huyện) trước sáp nhập tháng 7/2025. Hỗ trợ tool khoanh vùng, ghim khách hàng key, nhà phân phối.",
                     "tool2-title": "2. Tool kiểm tra và tối ưu hóa tuyến bán hàng",
@@ -303,6 +320,9 @@
                     "rep5-desc": "General report on wet market project status: providing information and metrics for upcoming strategic decisions.",
                     "rep6-title": "6. Wet market productivities",
                     "rep6-desc": "Detailed daily route productivity analysis for wet markets: Providing daily metrics for route improvement.",
+                    "tab-display": "Display process",
+                    "disp1-title": "1. Display process — TT Channel",
+                    "disp1-desc": "TT Channel display process: POSM standards, rewards, NPP allocation plan, and form templates.",
                     "tool1-title": "1. Mapping Tool",
                     "tool1-desc": "Provides administrative maps of Vietnam at level 1 (Provinces/Cities) and level 2 (Districts) prior to the July 2025 merger. Supports zoning, pinning key customers and distributors.",
                     "tool2-title": "2. Route Inspection & Optimization Tool",
