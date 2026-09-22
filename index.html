@@ -481,6 +481,25 @@
                 document.getElementById('password').value = '';
             });
 
+            // Display host trên domain khác → truyền session qua URL hash
+            const cardDisplay1 = document.getElementById('card-display-1');
+            if (cardDisplay1) {
+                cardDisplay1.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const { data: { session } } = await supabaseClient.auth.getSession();
+                    if (!session?.access_token || !session?.refresh_token) {
+                        alert(translations[currentLang]["err-generic"] || "Vui lòng đăng nhập lại.");
+                        return;
+                    }
+                    const target = new URL(cardDisplay1.href);
+                    target.hash = new URLSearchParams({
+                        access_token: session.access_token,
+                        refresh_token: session.refresh_token
+                    }).toString();
+                    window.location.href = target.toString();
+                });
+            }
+
             // GỌI HÀM LẤY DỮ LIỆU TỰ ĐỘNG KHI VỪA VÀO TRANG MÀ KHÔNG CẦN BẤM NÚT ĐỔI NGÔN NGỮ
             fetchGoogleSheetData();
 
