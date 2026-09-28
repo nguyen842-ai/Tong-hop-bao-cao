@@ -80,9 +80,6 @@
             <div class="mb-8 border-b border-gray-200 flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-0">
                 <div class="pb-4 lg:pb-6">
                     <h2 data-i18n="main-title" class="text-3xl font-black text-gray-900 tracking-tight uppercase">Hệ Thống Báo Cáo Nội Bộ</h2>
-                    <p id="dynamic-sheet-desc" class="mt-2 text-sm font-medium text-[#0c4da2] italic bg-[#eef4fa] border border-[#d1e3f5] inline-block px-3 py-1.5 rounded">
-                        Đang kiểm tra ngày cập nhật...
-                    </p>
                 </div>
 
                 <nav class="-mb-px flex space-x-6 overflow-x-auto" aria-label="Tabs">
@@ -103,7 +100,12 @@
 
             <div id="tab-contents">
                 
+                <!-- PRIMARY REPORT -->
                 <div id="tab-primary" class="tab-content hidden-element">
+                    <div class="mb-4 mt-2 flex flex-col sm:flex-row sm:items-center justify-between border-b pb-2 gap-2">
+                        <h3 class="text-xl font-bold text-[#0c4da2] uppercase">Primary Sales Report</h3>
+                        <span id="primary-update-status" class="text-sm font-medium text-[#0c4da2] italic bg-[#eef4fa] border border-[#d1e3f5] px-3 py-1.5 rounded">Last update: ...</span>
+                    </div>
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         <a href="https://nguyen842-ai.github.io/Performance-sales-team/" id="card-primary-1" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
                             <div class="text-4xl mb-4">🏆</div>
@@ -113,12 +115,13 @@
                     </div>
                 </div>
 
-                <!-- CẬP NHẬT TAB SECONDARY THEO YÊU CẦU MỚI -->
+                <!-- SECONDARY REPORT -->
                 <div id="tab-secondary" class="tab-content">
                     
                     <!-- Nhóm Daily Report -->
-                    <div class="mb-4 mt-2">
-                        <h3 class="text-xl font-bold text-[#0c4da2] border-b pb-2 uppercase">Daily Report</h3>
+                    <div class="mb-4 mt-2 flex flex-col sm:flex-row sm:items-center justify-between border-b pb-2 gap-2">
+                        <h3 class="text-xl font-bold text-[#0c4da2] uppercase">Daily Report</h3>
+                        <span id="daily-update-status" class="text-sm font-medium text-[#0c4da2] italic bg-[#eef4fa] border border-[#d1e3f5] px-3 py-1.5 rounded">Last updated: ...</span>
                     </div>
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-8">
                         <a href="https://nguyen842-ai.github.io/FUNDAMENTAL-Report/" id="card-report-1" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
@@ -135,8 +138,9 @@
                     </div>
 
                     <!-- Nhóm Weekly Report -->
-                    <div class="mb-4 mt-2">
-                        <h3 class="text-xl font-bold text-[#0c4da2] border-b pb-2 uppercase">Weekly Report</h3>
+                    <div class="mb-4 mt-2 flex flex-col sm:flex-row sm:items-center justify-between border-b pb-2 gap-2">
+                        <h3 class="text-xl font-bold text-[#0c4da2] uppercase">Weekly Report</h3>
+                        <span class="sheet-update-status text-sm font-medium text-[#0c4da2] italic bg-[#eef4fa] border border-[#d1e3f5] px-3 py-1.5 rounded">Đang tải trạng thái...</span>
                     </div>
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-8">
                         <a href="https://nguyen842-ai.github.io/Tracking-route-by-map/" id="card-report-3" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
@@ -159,8 +163,9 @@
                     </div>
 
                     <!-- Nhóm Monthly Report -->
-                    <div class="mb-4 mt-2">
-                        <h3 class="text-xl font-bold text-[#0c4da2] border-b pb-2 uppercase">Monthly Report</h3>
+                    <div class="mb-4 mt-2 flex flex-col sm:flex-row sm:items-center justify-between border-b pb-2 gap-2">
+                        <h3 class="text-xl font-bold text-[#0c4da2] uppercase">Monthly Report</h3>
+                        <span id="monthly-update-status" class="text-sm font-medium text-[#0c4da2] italic bg-[#eef4fa] border border-[#d1e3f5] px-3 py-1.5 rounded">Last update: ...</span>
                     </div>
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-8">
                         <a href="https://nguyen842-ai.github.io/coverage-report/" id="card-report-4" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
@@ -172,18 +177,27 @@
 
                 </div>
 
+                <!-- DISPLAY PROCESS -->
                 <div id="tab-display" class="tab-content hidden-element">
+                    <div class="mb-4 mt-2 flex flex-col sm:flex-row sm:items-center justify-between border-b pb-2 gap-2">
+                        <h3 class="text-xl font-bold text-[#0c4da2] uppercase">Display Process</h3>
+                        <span class="sheet-update-status text-sm font-medium text-[#0c4da2] italic bg-[#eef4fa] border border-[#d1e3f5] px-3 py-1.5 rounded">Đang tải trạng thái...</span>
+                    </div>
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         <a href="https://phungbui2203.github.io/Summary_Display/" id="card-display-1" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
                             <div class="text-4xl mb-4">🖼️</div>
                             <h3 data-i18n="disp1-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">1. Display process — TT Channel</h3>
                             <p data-i18n="disp1-desc" class="mt-2 text-sm text-gray-500 flex-1">Quy trình trưng bày kênh TT: tiêu chuẩn POSM, trả thưởng, kế hoạch theo NPP và form mẫu.</p>
                         </a>
-                        <!-- Thêm card web Display mới bên dưới khi có -->
                     </div>
                 </div>
 
+                <!-- SUPPORT TOOL -->
                 <div id="tab-support" class="tab-content hidden-element">
+                    <div class="mb-4 mt-2 flex flex-col sm:flex-row sm:items-center justify-between border-b pb-2 gap-2">
+                        <h3 class="text-xl font-bold text-[#0c4da2] uppercase">Support Tool</h3>
+                        <span class="sheet-update-status text-sm font-medium text-[#0c4da2] italic bg-[#eef4fa] border border-[#d1e3f5] px-3 py-1.5 rounded">Đang tải trạng thái...</span>
+                    </div>
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         <a href="https://nguyen842-ai.github.io/Tool-ve-ban-do/" id="card-tool-1" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
                             <div class="text-4xl mb-4">🗺️</div>
@@ -391,22 +405,50 @@
 
             btnVi.addEventListener('click', () => setLanguage('vi'));
             btnEn.addEventListener('click', () => setLanguage('en'));
+
+            // TÍNH TOÁN NGÀY THÁNG ĐỘNG
+            function updateDateStatuses() {
+                const today = new Date();
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                
+                // Yesterday (Daily report)
+                const yesterday = new Date(today);
+                yesterday.setDate(yesterday.getDate() - 1);
+                const yDay = String(yesterday.getDate()).padStart(2, '0');
+                const yMonth = months[yesterday.getMonth()];
+                const yYear = String(yesterday.getFullYear()).slice(-2);
+                
+                document.getElementById('daily-update-status').textContent = `Last updated: ${yDay} ${yMonth} '${yYear}`;
+                
+                // Last month (Monthly report & Primary report)
+                const lastMonthDate = new Date(today);
+                lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
+                const lmMonth = months[lastMonthDate.getMonth()];
+                const lmYear = String(lastMonthDate.getFullYear()).slice(-2);
+                
+                const lastMonthText = `Last update: ${lmMonth} '${lmYear}`;
+                document.getElementById('monthly-update-status').textContent = lastMonthText;
+                document.getElementById('primary-update-status').textContent = lastMonthText;
+            }
+
+            // Gọi hàm tính toán ngày 
+            updateDateStatuses();
             
+            // LẤY DỮ LIỆU TỪ GOOGLE SHEET CHỈ CHO WEEKLY / DISPLAY / SUPPORT
             async function fetchGoogleSheetData() {
-                const descElement = document.getElementById('dynamic-sheet-desc');
+                const sheetStatusElements = document.querySelectorAll('.sheet-update-status');
                 try {
                     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxAQTGjMeMrttvBEg1WzxPZHSeOznzZ4h8c95OdxYGSUS7cJiZ7iVxKUfDEddCfrsi9_Q/exec"; 
                     const response = await fetch(GAS_API_URL);
                     const data = await response.json();
                     
-                    if (data.text) {
-                        descElement.textContent = data.text;
-                    } else {
-                        descElement.textContent = currentLang === 'vi' ? "Chào mừng bạn đến với hệ thống báo cáo." : "Welcome to the reporting system.";
-                    }
+                    const textToDisplay = data.text ? data.text : (currentLang === 'vi' ? "Cập nhật thành công." : "Updated successfully.");
+                    sheetStatusElements.forEach(el => el.textContent = textToDisplay);
+                    
                 } catch (error) {
                     console.error("Lỗi khi tải dữ liệu Sheets:", error);
-                    descElement.textContent = currentLang === 'vi' ? "Hệ thống đang hoạt động bình thường." : "The system is operating normally.";
+                    const errorText = currentLang === 'vi' ? "Hệ thống đang hoạt động bình thường." : "The system is operating normally.";
+                    sheetStatusElements.forEach(el => el.textContent = errorText);
                 }
             }
 
