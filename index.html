@@ -1,567 +1,798 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tổng hợp báo cáo-TCIVN</title>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Hệ thống Báo cáo - TCIVN</title>
+
+  <!-- Favicon -->
+  <link href="faviconTCI.png" rel="icon">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  
+  <!-- Main Arsha CSS -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Tùy chỉnh CSS thêm cho Dashboard -->
+  <style>
+    /* Sử dụng font chữ gốc giống Tailwind CSS cho dễ đọc */
+    body, h1, h2, h3, h4, h5, h6, p, a, button, input {
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    }
+
+    /* Form đăng nhập trên nền Hero */
+    .hero.dark-background {
+      background: #37517e;
+    }
+    .login-box {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.2);
+    }
+    /* Bo tròn hoàn toàn nút đăng nhập */
+    #login-btn {
+      border-radius: 50px !important;
+    }
+
+    /* 3. Phủ lớp màu xanh nhẹ lên nền như hình minh họa */
+    #main-portal {
+      /* Thêm linear-gradient màu xanh (pha alpha 0.75) đè lên ảnh nền */
+      background: linear-gradient(rgba(38, 72, 114, 0.75), rgba(38, 72, 114, 0.75)), url('assets/img/bg/bg-8.webp') center center no-repeat;
+      background-size: cover;
+      background-attachment: fixed; /* Cuộn trang nền đứng yên */
+    }
+
+    /* Box Banner trong suốt (Hiệu ứng kính Glassmorphism) */
+    .dashboard-banner {
+      position: relative;
+      background: rgba(255, 255, 255, 0.1); /* Nền trong suốt hơn */
+      backdrop-filter: blur(8px); /* Làm mờ phần nền phía sau */
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2); 
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    }
+    .dashboard-banner h2 {
+      text-shadow: 0px 2px 4px rgba(0,0,0,0.4); 
+    }
     
-    <link rel="icon" type="image/png" href="./faviconTCI.png">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        .hidden-element { display: none !important; }
-        .tab-active { border-bottom-color: #0c4da2 !important; color: #0c4da2 !important; }
-        .tab-inactive { border-bottom-color: transparent !important; color: #6b7280 !important; }
-    </style>
+    /* 4. Tuỳ chỉnh Tabs - Nút bo tròn viền trắng giống "Call to Action" */
+    .dashboard-tabs {
+      gap: 10px; /* Tạo khoảng cách đều giữa các tab */
+    }
+    .dashboard-tabs .nav-link {
+      color: #fff;
+      font-weight: 600;
+      border-radius: 50px; /* Bo tròn hoàn toàn */
+      padding: 10px 24px;
+      transition: 0.3s;
+      background: transparent;
+      border: 1.5px solid #fff;
+      box-shadow: none;
+    }
+    .dashboard-tabs .nav-link:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+    .dashboard-tabs .nav-link.active {
+      background-color: rgba(255, 255, 255, 0.25) !important;
+      color: #fff;
+      border-color: #fff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Style chung cho Card báo cáo (Fix lỗi hiển thị) */
+    .report-card {
+      transition: all ease-in-out 0.3s;
+      background: rgba(255, 255, 255, 0.95); 
+      backdrop-filter: blur(5px);
+      border: 1px solid #e1e6f1;
+      border-radius: 16px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      overflow: hidden;
+    }
+    .report-card .card-img-wrap {
+      height: 180px; /* Fix chiều cao ảnh ổn định */
+      overflow: hidden;
+      position: relative;
+    }
+    .report-card .card-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 0.5s ease;
+    }
+    .report-card h4 {
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: #37517e;
+      transition: 0.3s;
+      margin-top: 15px;
+      margin-bottom: 10px;
+    }
+    .report-card p {
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-bottom: 0;
+      flex-grow: 1; /* Cân bằng chiều cao chữ ở các thẻ */
+    }
+    .report-card:hover {
+      transform: translateY(-8px);
+      border-color: #47b2e4;
+      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    .report-card:hover .card-img-wrap img {
+      transform: scale(1.1);
+    }
+    .report-card:hover h4 {
+      color: #47b2e4;
+    }
+
+    /* Style Màu Cam Đặc Biệt Cho Wet Market */
+    .card-orange {
+      background: rgba(255, 248, 243, 0.95); 
+      border-color: #fbd6b9;
+    }
+    .card-orange:hover {
+      border-color: #fd7e14 !important;
+      box-shadow: 0px 10px 30px rgba(253, 126, 20, 0.15) !important;
+    }
+    .card-orange:hover h4 {
+      color: #e86e04 !important;
+    }
+
+    /* Nút bo tròn bên trong card */
+    .card-pill-btn {
+      border-radius: 50px !important;
+    }
+
+    body { background-color: #f8f9fa; }
+  </style>
 </head>
-<body class="bg-gray-50 font-sans antialiased text-gray-800">
 
-    <div id="login-section" class="flex min-h-screen items-center justify-center px-4">
-        <div class="w-full max-w-md space-y-8 rounded-xl bg-white p-10 shadow-lg border border-gray-100">
-            <div class="text-center">
-                <img src="./logo.png" alt="TCIVN Logo" class="mx-auto h-16 w-auto mb-4 object-contain">
-                <h2 data-i18n="login-title" class="text-3xl font-extrabold tracking-tight text-gray-900">Hệ thống báo cáo</h2>
-                <p data-i18n="login-subtitle" class="mt-2 text-sm text-gray-500">Vui lòng đăng nhập để tiếp tục</p>
-            </div>
+<body>
 
-            <div id="login-error-msg" class="hidden-element rounded-md bg-red-50 p-4 border border-red-200 mt-4">
-                <p class="text-sm text-red-700 font-medium text-center" id="login-error-text">Sai tài khoản hoặc mật khẩu!</p>
-            </div>
+  <!-- ============================================ -->
+  <!-- PHẦN ĐĂNG NHẬP (HERO SECTION)                -->
+  <!-- ============================================ -->
+  <div id="login-section">
+    <section id="hero" class="hero section dark-background d-flex align-items-center min-vh-100">
+      <div class="container" style="transform: translateY(-80px);">
+        
+        <div class="row gy-4 align-items-center justify-content-between">
+          
+          <!-- Cột Form Đăng nhập -->
+          <div class="col-lg-5 order-2 order-lg-1 d-flex flex-column justify-content-center pe-lg-5" data-aos="fade-right" data-aos-delay="100">
+            <h1 data-i18n="login-title" class="mb-2">Hệ thống báo cáo</h1>
+            <p data-i18n="login-subtitle" class="fs-5 text-white-50 mb-4">Vui lòng đăng nhập để truy cập vào hệ thống dữ liệu nội bộ của Thai Corp International.</p>
+            
+            <div class="login-box" data-aos="zoom-in" data-aos-delay="300">
+              <div class="text-center mb-4">
+                <img src="logo.png" alt="TCIVN Logo" class="img-fluid" style="max-height: 50px;">
+              </div>
 
-            <form id="login-form" class="mt-8 space-y-6">
-                <div class="space-y-4">
-                    <div>
-                        <label data-i18n="email-label" class="block text-sm font-semibold text-gray-700 mb-1">Tài khoản Email</label>
-                        <input id="email" type="email" required class="block w-full rounded-md border border-gray-300 px-4 py-3 shadow-sm focus:border-[#0c4da2] focus:ring-[#0c4da2] transition outline-none">
-                    </div>
-                    <div>
-                        <label data-i18n="password-label" class="block text-sm font-semibold text-gray-700 mb-1">Mật khẩu</label>
-                        <input id="password" type="password" required class="block w-full rounded-md border border-gray-300 px-4 py-3 shadow-sm focus:border-[#0c4da2] focus:ring-[#0c4da2] transition outline-none">
-                    </div>
+              <div id="login-error-msg" class="alert alert-danger d-none py-2 text-center small fw-bold" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i> <span id="login-error-text">Sai tài khoản hoặc mật khẩu!</span>
+              </div>
+
+              <form id="login-form">
+                <div class="mb-3">
+                  <label data-i18n="email-label" class="form-label fw-bold text-dark small">Tài khoản Email</label>
+                  <input id="email" type="email" class="form-control form-control-lg bg-light" required>
                 </div>
-                <button type="submit" id="login-btn" class="flex w-full justify-center rounded-md bg-[#0c4da2] px-4 py-3 text-sm font-bold text-white hover:bg-[#0a3c82] shadow-md transition">
-                    <span data-i18n="login-btn">Đăng nhập hệ thống</span>
+                <div class="mb-4">
+                  <label data-i18n="password-label" class="form-label fw-bold text-dark small">Mật khẩu</label>
+                  <input id="password" type="password" class="form-control form-control-lg bg-light" required>
+                </div>
+                <!-- Đã thêm bo tròn (#login-btn CSS) -->
+                <button type="submit" id="login-btn" class="btn btn-primary w-100 py-3 fw-bold" style="background: #47b2e4; border: none;">
+                  <span data-i18n="login-btn">Đăng nhập hệ thống</span>
                 </button>
-            </form>
+              </form>
+            </div>
+          </div>
+
+          <!-- Cột Hình ảnh lơ lửng -->
+          <div class="col-lg-6 order-1 order-lg-2 hero-img text-center ps-lg-5" data-aos="zoom-out" data-aos-delay="200">
+            <div style="transform: scale(1.15); transform-origin: center right;">
+              <img src="assets/img/hero-img.png" class="img-fluid animated" alt="Hero Image">
+            </div>
+          </div>
+          
         </div>
-    </div>
 
-    <div id="main-portal" class="hidden-element min-h-screen flex flex-col">
+      </div>
+    </section>
+  </div>
+
+
+  <!-- ============================================ -->
+  <!-- PHẦN DASHBOARD CHÍNH BÊN TRONG               -->
+  <!-- ============================================ -->
+  <div id="main-portal" class="d-none d-flex flex-column min-vh-100">
+    
+    <!-- 1. Header (Đã bỏ sticky-top để unfreeze, và đổi py-3 thành py-2 để thu hẹp) -->
+    <header id="header" class="header shadow-sm py-2 border-bottom" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);">
+      <div class="container d-flex align-items-center justify-content-between">
+        <a href="#" class="logo d-flex align-items-center text-decoration-none gap-2">
+          <img src="logo.png" alt="Logo" class="img-fluid" style="max-height: 40px;">
+          <h1 class="fs-6 m-0 fw-bold d-none d-md-block" style="color: #37517e;">Thai Corp International</h1>
+        </a>
+        <div class="d-flex align-items-center gap-3">
+          <span id="user-greeting" class="text-white fw-bold small d-none d-sm-block px-2 py-1 bg-secondary bg-opacity-25 rounded-pill">Xin chào, ...</span>
+          <div class="btn-group border rounded-pill bg-white overflow-hidden" role="group">
+            <button type="button" id="lang-vi" class="btn btn-sm btn-primary fw-bold d-flex align-items-center gap-1" style="background: #47b2e4; border:none; border-radius:0;">
+              <img src="https://flagcdn.com/w20/vn.png" width="18" alt="VN"> VI
+            </button>
+            <button type="button" id="lang-en" class="btn btn-sm btn-light text-muted d-flex align-items-center gap-1" style="border:none; border-radius:0;">
+              <img src="https://flagcdn.com/w20/gb.png" width="18" alt="EN"> EN
+            </button>
+          </div>
+          <button id="logout-btn" class="btn btn-sm btn-light border fw-bold text-danger px-3 shadow-sm hover-shadow bg-white rounded-pill">
+            <i class="bi bi-box-arrow-right"></i> <span data-i18n="logout-btn">Đăng xuất</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow-1 pb-5">
+      
+      <!-- Banner Box Trong Suốt -->
+      <div class="container mt-4" data-aos="fade-down">
+        <div class="dashboard-banner py-4 px-4 px-md-5">
+          <div class="text-center">
+            <h2 data-i18n="main-title" class="fw-bold m-0 text-uppercase text-white tracking-wide">Hệ Thống Báo Cáo Nội Bộ</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="container mt-4" data-aos="fade-up" data-aos-delay="100">
         
-        <header class="bg-white shadow-sm border-b border-gray-200">
-            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-                <div class="flex items-center gap-3">
-                    <img src="./logo.png" alt="TCIVN Logo" class="h-10 w-auto object-contain">
-                    <h1 class="text-lg sm:text-xl font-bold text-[#0c4da2]">Thai Corp International (Vietnam) Co., Ltd.</h1>
-                </div>
-                
-                <div class="flex items-center gap-3 sm:gap-4">
-                    <span id="user-greeting" class="text-sm font-medium text-gray-600 hidden sm:inline-block">Xin chào, ...</span>
-                    
-                    <div class="hidden sm:flex bg-gray-200 rounded-lg p-1 items-center">
-                        <button id="lang-vi" class="px-3 py-1.5 rounded-md text-sm font-bold transition-all duration-200 bg-white text-[#0c4da2] shadow-sm">
-                            🇻🇳 VI
-                        </button>
-                        <button id="lang-en" class="px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 text-gray-500 hover:text-gray-700">
-                            🇬🇧 EN
-                        </button>
-                    </div>
+        <!-- Tabs Navigation -->
+        <ul class="nav nav-pills dashboard-tabs overflow-auto flex-nowrap mb-4 pb-2">
+          <li class="nav-item">
+            <button id="tab-btn-primary" onclick="switchTab('primary')" class="nav-link">Primary Sales</button>
+          </li>
+          <li class="nav-item">
+            <button id="tab-btn-secondary" onclick="switchTab('secondary')" class="nav-link active">Secondary Sales</button>
+          </li>
+          <li class="nav-item">
+            <button id="tab-btn-display" onclick="switchTab('display')" class="nav-link"><span data-i18n="tab-display">Display Process</span></button>
+          </li>
+          <li class="nav-item">
+            <button id="tab-btn-support" onclick="switchTab('support')" class="nav-link">Support Tools</button>
+          </li>
+        </ul>
 
-                    <button id="logout-btn" class="rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-red-50 hover:text-red-600 transition">
-                        <span data-i18n="logout-btn">Đăng xuất</span>
-                    </button>
-                </div>
+        <div id="tab-contents">
+          
+          <!-- PRIMARY REPORT -->
+          <div id="tab-primary" class="tab-content d-none">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold text-uppercase m-0 text-white" style="text-shadow: 0 1px 2px rgba(0,0,0,0.5);">Danh sách Báo cáo</h5>
+              <span id="primary-update-status" class="badge rounded-pill bg-white text-primary border px-3 py-2 shadow-sm">Last update: ...</span>
             </div>
-        </header>
+            <!-- Thêm align-items-stretch để fix flex card -->
+            <div class="row g-4 align-items-stretch">
+              <div class="col-lg-4 col-md-6" id="card-primary-1" data-aos="zoom-in" data-aos-delay="100">
+                <a href="https://nguyen842-ai.github.io/Performance-sales-team/" class="report-card">
+                  <div class="card-img-wrap"><img src="assets/img/hero-img.png" alt="Primary" style="object-fit: contain; background: #e3ecf5; padding: 20px;"></div>
+                  <div class="p-4 d-flex flex-column flex-grow-1">
+                    <span class="badge bg-primary w-auto align-self-start mb-2 rounded-pill">Primary</span>
+                    <h4 data-i18n="prim1-title">1. Summary Performance</h4>
+                    <p data-i18n="prim1-desc">Tổng hợp target, actual performance sell in- sell out của Sales team theo khách hàng và doanh số.</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
 
-        <main class="flex-1 p-6 sm:p-10 mx-auto w-full max-w-7xl">
+          <!-- SECONDARY REPORT -->
+          <div id="tab-secondary" class="tab-content">
             
-            <div class="mb-8 border-b border-gray-200 flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-0">
-                <div class="pb-4 lg:pb-6">
-                    <h2 data-i18n="main-title" class="text-3xl font-black text-gray-900 tracking-tight uppercase">Hệ Thống Báo Cáo Nội Bộ</h2>
-                </div>
-
-                <nav class="-mb-px flex space-x-6 overflow-x-auto" aria-label="Tabs">
-                    <button id="tab-btn-primary" onclick="switchTab('primary')" class="tab-btn tab-inactive hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-semibold text-base transition">
-                        Primary sales report
-                    </button>
-                    <button id="tab-btn-secondary" onclick="switchTab('secondary')" class="tab-btn tab-active whitespace-nowrap py-4 px-1 border-b-2 font-semibold text-base transition">
-                        Secondary sales report
-                    </button>
-                    <button id="tab-btn-display" onclick="switchTab('display')" class="tab-btn tab-inactive hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-semibold text-base transition">
-                        <span data-i18n="tab-display">Display process</span>
-                    </button>
-                    <button id="tab-btn-support" onclick="switchTab('support')" class="tab-btn tab-inactive hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-semibold text-base transition">
-                        Support tool
-                    </button>
-                </nav>
+            <!-- Daily Report -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold text-uppercase m-0 text-white" style="text-shadow: 0 1px 2px rgba(0,0,0,0.5);">Daily Report</h5>
+              <span id="daily-update-status" class="badge rounded-pill bg-white text-primary border px-3 py-2 shadow-sm">Last updated: ...</span>
+            </div>
+            <div class="row g-4 mb-5 align-items-stretch">
+              <div class="col-lg-4 col-md-6" id="card-report-1" data-aos="zoom-in" data-aos-delay="100">
+                <a href="https://nguyen842-ai.github.io/FUNDAMENTAL-Report/" class="report-card">
+                  <div class="card-img-wrap"><img src="assets/img/steps/steps-2.png" alt="Daily 1"></div>
+                  <div class="p-4 d-flex flex-column flex-grow-1">
+                    <span class="badge bg-info text-dark w-auto align-self-start mb-2 rounded-pill">Daily</span>
+                    <h4 data-i18n="rep1-title">1. FUNDAMENTAL REPORT</h4>
+                    <p data-i18n="rep1-desc">Tổng quan tình hình xây dựng và thực thi tuyến bán hàng: cung cấp các chỉ số phục vụ cho quyết định chiến lược sắp tới</p>
+                  </div>
+                </a>
+              </div>
+              <div class="col-lg-4 col-md-6" id="card-report-2" data-aos="zoom-in" data-aos-delay="200">
+                <a href="https://nguyen842-ai.github.io/Routeproductivities.2026/" class="report-card">
+                  <div class="card-img-wrap"><img src="assets/img/steps/step-1.png" alt="Daily 2"></div>
+                  <div class="p-4 d-flex flex-column flex-grow-1">
+                    <span class="badge bg-info text-dark w-auto align-self-start mb-2 rounded-pill">Daily</span>
+                    <h4 data-i18n="rep2-title">2. Route productivities</h4>
+                    <p data-i18n="rep2-desc">Phân tích chi tiết hiệu suất tuyến theo từng ngày: Cung cấp chi tiết chỉ số theo ngày phục vụ cho mục đích cải thiện tuyến bán hàng</p>
+                  </div>
+                </a>
+              </div>
             </div>
 
-            <div id="tab-contents">
-                
-                <!-- PRIMARY REPORT -->
-                <div id="tab-primary" class="tab-content hidden-element">
-                    <div class="mb-4 mt-2 flex flex-col sm:flex-row sm:items-center justify-between border-b pb-2 gap-2">
-                        <h3 class="text-xl font-bold text-[#0c4da2] uppercase">Primary Sales Report</h3>
-                        <span id="primary-update-status" class="text-sm font-medium text-[#0c4da2] italic bg-[#eef4fa] border border-[#d1e3f5] px-3 py-1.5 rounded">Last update: ...</span>
-                    </div>
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        <a href="https://nguyen842-ai.github.io/Performance-sales-team/" id="card-primary-1" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
-                            <div class="text-4xl mb-4">🏆</div>
-                            <h3 data-i18n="prim1-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">1. Summary Performance sales team</h3>
-                            <p data-i18n="prim1-desc" class="mt-2 text-sm text-gray-500 flex-1">Tổng hợp target, actual performance sell in- sell out của Sales team theo khách hàng và doanh số.</p>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- SECONDARY REPORT -->
-                <div id="tab-secondary" class="tab-content">
-                    
-                    <!-- Nhóm Daily Report -->
-                    <div class="mb-4 mt-2 flex flex-col sm:flex-row sm:items-center justify-between border-b pb-2 gap-2">
-                        <h3 class="text-xl font-bold text-[#0c4da2] uppercase">Daily Report</h3>
-                        <span id="daily-update-status" class="text-sm font-medium text-[#0c4da2] italic bg-[#eef4fa] border border-[#d1e3f5] px-3 py-1.5 rounded">Last updated: ...</span>
-                    </div>
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-8">
-                        <a href="https://nguyen842-ai.github.io/FUNDAMENTAL-Report/" id="card-report-1" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
-                            <div class="text-4xl mb-4">📊</div>
-                            <h3 data-i18n="rep1-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">1. FUNDAMENTAL REPORT</h3>
-                            <p data-i18n="rep1-desc" class="mt-2 text-sm text-gray-500 flex-1">Tổng quan tình hình xây dựng và thực thi tuyến bán hàng: cung cấp các chỉ số phục vụ cho quyết định chiến lược sắp tới</p>
-                        </a>
-
-                        <a href="https://nguyen842-ai.github.io/Routeproductivities.2026/" id="card-report-2" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
-                            <div class="text-4xl mb-4">📈</div>
-                            <h3 data-i18n="rep2-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">2. Route productivities</h3>
-                            <p data-i18n="rep2-desc" class="mt-2 text-sm text-gray-500 flex-1">Phân tích chi tiết hiệu suất tuyến theo từng ngày: Cung cấp chi tiết chỉ số theo ngày phục vụ cho mục đích cải thiện tuyến bán hàng</p>
-                        </a>
-                    </div>
-
-                    <!-- Nhóm Weekly Report -->
-                    <div class="mb-4 mt-2 flex flex-col sm:flex-row sm:items-center justify-between border-b pb-2 gap-2">
-                        <h3 class="text-xl font-bold text-[#0c4da2] uppercase">Weekly Report</h3>
-                        <span class="sheet-update-status text-sm font-medium text-[#0c4da2] italic bg-[#eef4fa] border border-[#d1e3f5] px-3 py-1.5 rounded">Đang tải trạng thái...</span>
-                    </div>
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-8">
-                        <a href="https://nguyen842-ai.github.io/Tracking-route-by-map/" id="card-report-3" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
-                            <div class="text-4xl mb-4">📍</div>
-                            <h3 data-i18n="rep3-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">1. Route & Revenue Tracker</h3>
-                            <p data-i18n="rep3-desc" class="mt-2 text-sm text-gray-500 flex-1">Báo cáo chi tiết ghé thăm khách hàng theo từng tuần: Tuyến đường, lộ trình, vị trí khách hàng và doanh số</p>
-                        </a>
-
-                        <a href="https://nguyen842-ai.github.io/Summary-report-wet-market-project.2026/" id="card-report-5" class="group flex flex-col rounded-xl bg-[#f5f8fc] p-6 shadow-sm border border-[#d1e3f5] hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
-                            <div class="text-4xl mb-4">🤝</div>
-                            <h3 data-i18n="rep5-title" class="text-lg font-bold text-[#0c4da2] group-hover:text-[#0a3c82]">2. Summary Wet market project</h3>
-                            <p data-i18n="rep5-desc" class="mt-2 text-sm text-gray-600 flex-1">Báo cáo chung tình hình dự án tuyến chợ truyền thống: cung cấp các thông tin và chỉ số phục vụ cho quyết định chiến lược sắp tới</p>
-                        </a>
-                        
-                        <a href="https://nguyen842-ai.github.io/Tracking-tuyen-cho-truyen-thong/" id="card-report-6" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
-                            <div class="text-4xl mb-4">🏘️</div>
-                            <h3 data-i18n="rep6-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">3. Wet market productivities</h3>
-                            <p data-i18n="rep6-desc" class="mt-2 text-sm text-gray-500 flex-1">Phân tích chi tiết hiệu suất tuyến theo từng ngày của tuyến chợ truyền thống: Cung cấp chi tiết chỉ số theo ngày phục vụ cho mục đích cải thiện tuyến bán hàng.</p>
-                        </a>
-                    </div>
-
-                    <!-- Nhóm Monthly Report -->
-                    <div class="mb-4 mt-2 flex flex-col sm:flex-row sm:items-center justify-between border-b pb-2 gap-2">
-                        <h3 class="text-xl font-bold text-[#0c4da2] uppercase">Monthly Report</h3>
-                        <span id="monthly-update-status" class="text-sm font-medium text-[#0c4da2] italic bg-[#eef4fa] border border-[#d1e3f5] px-3 py-1.5 rounded">Last update: ...</span>
-                    </div>
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-8">
-                        <a href="https://nguyen842-ai.github.io/coverage-report/" id="card-report-4" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
-                            <div class="text-4xl mb-4">🌏</div>
-                            <h3 data-i18n="rep4-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">1. Coverage Report</h3>
-                            <p data-i18n="rep4-desc" class="mt-2 text-sm text-gray-500 flex-1">Độ bao phủ theo khu vực địa lý hành chính Việt Nam trước sáp nhập tháng 07/2025.</p>
-                        </a>
-                    </div>
-
-                </div>
-
-                <!-- DISPLAY PROCESS -->
-                <div id="tab-display" class="tab-content hidden-element">
-                    <div class="mb-4 mt-2 flex flex-col sm:flex-row sm:items-center justify-between border-b pb-2 gap-2">
-                        <h3 class="text-xl font-bold text-[#0c4da2] uppercase">Display Process</h3>
-                        <span class="sheet-update-status text-sm font-medium text-[#0c4da2] italic bg-[#eef4fa] border border-[#d1e3f5] px-3 py-1.5 rounded">Đang tải trạng thái...</span>
-                    </div>
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        <a href="https://phungbui2203.github.io/Summary_Display/" id="card-display-1" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
-                            <div class="text-4xl mb-4">🖼️</div>
-                            <h3 data-i18n="disp1-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">1. Display process — TT Channel</h3>
-                            <p data-i18n="disp1-desc" class="mt-2 text-sm text-gray-500 flex-1">Quy trình trưng bày kênh TT: tiêu chuẩn POSM, trả thưởng, kế hoạch theo NPP và form mẫu.</p>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- SUPPORT TOOL -->
-                <div id="tab-support" class="tab-content hidden-element">
-                    <div class="mb-4 mt-2 flex flex-col sm:flex-row sm:items-center justify-between border-b pb-2 gap-2">
-                        <h3 class="text-xl font-bold text-[#0c4da2] uppercase">Support Tool</h3>
-                        <span class="sheet-update-status text-sm font-medium text-[#0c4da2] italic bg-[#eef4fa] border border-[#d1e3f5] px-3 py-1.5 rounded">Đang tải trạng thái...</span>
-                    </div>
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        <a href="https://nguyen842-ai.github.io/Tool-ve-ban-do/" id="card-tool-1" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
-                            <div class="text-4xl mb-4">🗺️</div>
-                            <h3 data-i18n="tool1-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">1. Tool vẽ bản đồ</h3>
-                            <p data-i18n="tool1-desc" class="mt-2 text-sm text-gray-500 flex-1">Cung cấp bản đồ hành chính Việt Nam cấp 1 (Tỉnh/Thành phố) và cấp 2 (Quận huyện) trước sáp nhập tháng 7/2025. Hỗ trợ tool khoanh vùng, ghim khách hàng key, nhà phân phối.</p>
-                        </a>
-                        
-                        <div id="card-tool-2" class="flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition">
-                            <a href="https://nguyen842-ai.github.io/Tool-toi-uu-tuyen/" class="group flex flex-col flex-1 cursor-pointer mb-5">
-                                <div class="text-4xl mb-4">⚙️</div>
-                                <h3 data-i18n="tool2-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">2. Tool kiểm tra và tối ưu hóa tuyến bán hàng</h3>
-                                <p data-i18n="tool2-desc" class="mt-2 text-sm text-gray-500 flex-1">Kiểm tra chi tiết tính hợp lệ của tuyến bán hàng, tối ưu tuyến bán hàng bằng trợ lý AI.</p>
-                            </a>
-                            
-                            <div class="mt-auto flex flex-col gap-2.5">
-                                <a href="https://nguyen842-ai.github.io/In-depth-Evaluation-route/" class="block w-full rounded-md bg-[#0c4da2] px-4 py-2 text-center shadow-sm hover:bg-[#0a3c82] transition cursor-pointer">
-                                    <span data-i18n="tool-new-title" class="text-sm font-bold text-white tracking-wide">Đánh Giá Hiệu Quả & Năng Suất Tuyến</span>
-                                </a>
-                                
-                                <a href="https://www.youtube.com/watch?v=Agd__MAJTPA" target="_blank" class="flex items-center justify-center gap-2 w-full rounded-md bg-white border border-[#0c4da2] px-4 py-1.5 text-center shadow-sm hover:bg-[#f5f8fc] transition cursor-pointer">
-                                    <span class="text-red-600 text-sm">▶</span>
-                                    <span data-i18n="tool-guide-title" class="text-sm font-bold text-[#0c4da2] tracking-wide">Hướng dẫn sử dụng tool</span>
-                                </a>
-                            </div>
-                        </div>
-
-                        <a href="https://nguyen842-ai.github.io/Tool-xu-li-dskh/" id="card-tool-3" class="group flex flex-col rounded-xl bg-white p-6 shadow-sm border border-gray-200 hover:shadow-md hover:border-[#0c4da2] transition cursor-pointer">
-                            <div class="text-4xl mb-4">🏛️</div>
-                            <h3 data-i18n="tool3-title" class="text-lg font-bold text-gray-900 group-hover:text-[#0c4da2]">3. Tool kiểm tra đơn vị hành chính Việt Nam các cấp trước sáp nhập</h3>
-                            <p data-i18n="tool3-desc" class="mt-2 text-sm text-gray-500 flex-1">Kiểm tra đơn vị hành chính của khách hàng đến cấp phường xã phục vụ cho việc xếp tuyến theo khu vực</p>
-                        </a>
-                    </div>
-                </div>
+            <!-- Weekly Report -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold text-uppercase m-0 text-white" style="text-shadow: 0 1px 2px rgba(0,0,0,0.5);">Weekly Report</h5>
+              <span class="sheet-update-status badge rounded-pill bg-white text-primary border px-3 py-2 shadow-sm">Đang tải...</span>
             </div>
-        </main>
-        
-        <footer class="bg-white border-t border-gray-200 mt-auto">
-            <div class="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8 text-center text-sm text-gray-500 font-medium">
-                <span data-i18n="footer-text">Bản quyền &copy; thuộc về Thai Corp International (Vietnam) Co., Ltd. Bảo lưu mọi quyền.</span>
+            <div class="row g-4 mb-5 align-items-stretch">
+              <div class="col-lg-4 col-md-6" id="card-report-3" data-aos="zoom-in" data-aos-delay="100">
+                <a href="https://nguyen842-ai.github.io/Tracking-route-by-map/" class="report-card">
+                  <div class="card-img-wrap"><img src="assets/img/steps/steps-3.png" alt="Weekly 1"></div>
+                  <div class="p-4 d-flex flex-column flex-grow-1">
+                    <span class="badge bg-warning text-dark w-auto align-self-start mb-2 rounded-pill">Weekly</span>
+                    <h4 data-i18n="rep3-title">1. Route & Revenue Tracker</h4>
+                    <p data-i18n="rep3-desc">Báo cáo chi tiết ghé thăm khách hàng theo từng tuần: Tuyến đường, lộ trình, vị trí khách hàng và doanh số</p>
+                  </div>
+                </a>
+              </div>
+              
+              <!-- CARD MÀU CAM: Summary wet market project -->
+              <div class="col-lg-4 col-md-6" id="card-report-5" data-aos="zoom-in" data-aos-delay="200">
+                <a href="https://nguyen842-ai.github.io/Summary-report-wet-market-project.2026/" class="report-card card-orange">
+                  <div class="card-img-wrap"><img src="assets/img/portfolio/portfolio-7.png" alt="Weekly 2"></div>
+                  <div class="p-4 d-flex flex-column flex-grow-1">
+                    <span class="badge w-auto align-self-start mb-2 rounded-pill" style="background-color: #fd7e14; color: #fff;">Project</span>
+                    <h4 data-i18n="rep5-title" style="color: #fd7e14;">2. Summary Wet market project</h4>
+                    <p data-i18n="rep5-desc">Báo cáo chung tình hình dự án tuyến chợ truyền thống: cung cấp các thông tin và chỉ số phục vụ cho quyết định chiến lược sắp tới</p>
+                  </div>
+                </a>
+              </div>
+
+              <div class="col-lg-4 col-md-6" id="card-report-6" data-aos="zoom-in" data-aos-delay="300">
+                <a href="https://nguyen842-ai.github.io/Tracking-tuyen-cho-truyen-thong/" class="report-card">
+                  <div class="card-img-wrap"><img src="assets/img/portfolio/portfolio-4.png" alt="Weekly 3"></div>
+                  <div class="p-4 d-flex flex-column flex-grow-1">
+                    <span class="badge bg-warning text-dark w-auto align-self-start mb-2 rounded-pill">Weekly</span>
+                    <h4 data-i18n="rep6-title">3. Wet market productivities</h4>
+                    <p data-i18n="rep6-desc">Phân tích chi tiết hiệu suất tuyến theo từng ngày của tuyến chợ truyền thống phục vụ cho mục đích cải thiện tuyến bán hàng.</p>
+                  </div>
+                </a>
+              </div>
             </div>
-        </footer>
 
-    </div>
+            <!-- Monthly Report -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold text-uppercase m-0 text-white" style="text-shadow: 0 1px 2px rgba(0,0,0,0.5);">Monthly Report</h5>
+              <span id="monthly-update-status" class="badge rounded-pill bg-white text-primary border px-3 py-2 shadow-sm">Last update: ...</span>
+            </div>
+            <div class="row g-4 align-items-stretch">
+              <div class="col-lg-4 col-md-6" id="card-report-4" data-aos="zoom-in" data-aos-delay="100">
+                <a href="https://nguyen842-ai.github.io/coverage-report/" class="report-card">
+                  <div class="card-img-wrap"><img src="assets/img/portfolio/portfolio-1.png" alt="Monthly"></div>
+                  <div class="p-4 d-flex flex-column flex-grow-1">
+                    <span class="badge bg-success w-auto align-self-start mb-2 rounded-pill">Monthly</span>
+                    <h4 data-i18n="rep4-title">1. Coverage Report</h4>
+                    <p data-i18n="rep4-desc">Độ bao phủ theo khu vực địa lý hành chính Việt Nam trước sáp nhập tháng 07/2025.</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
 
-    <script>
-        function switchTab(tabId) {
-            const allBtns = document.querySelectorAll('.tab-btn');
-            allBtns.forEach(btn => {
-                btn.classList.remove('tab-active');
-                btn.classList.add('tab-inactive');
-            });
+          <!-- DISPLAY PROCESS -->
+          <div id="tab-display" class="tab-content d-none">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold text-uppercase m-0 text-white" style="text-shadow: 0 1px 2px rgba(0,0,0,0.5);">Quy trình Trưng bày</h5>
+              <span class="sheet-update-status badge rounded-pill bg-white text-primary border px-3 py-2 shadow-sm">Đang tải...</span>
+            </div>
+            <div class="row g-4 align-items-stretch">
+              <div class="col-lg-4 col-md-6" id="card-display-1" data-aos="zoom-in" data-aos-delay="100">
+                <a href="https://phungbui2203.github.io/Summary_Display/" class="report-card">
+                  <div class="card-img-wrap"><img src="assets/img/portfolio/portfolio-3.png" alt="Display"></div>
+                  <div class="p-4 d-flex flex-column flex-grow-1">
+                    <span class="badge bg-secondary w-auto align-self-start mb-2 rounded-pill">Process</span>
+                    <h4 data-i18n="disp1-title">1. Display process — TT Channel</h4>
+                    <p data-i18n="disp1-desc">Quy trình trưng bày kênh TT: tiêu chuẩn POSM, trả thưởng, kế hoạch theo NPP và form mẫu.</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
 
-            const allContents = document.querySelectorAll('.tab-content');
-            allContents.forEach(content => content.classList.add('hidden-element'));
+          <!-- SUPPORT TOOL -->
+          <div id="tab-support" class="tab-content d-none">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold text-uppercase m-0 text-white" style="text-shadow: 0 1px 2px rgba(0,0,0,0.5);">Công cụ hỗ trợ</h5>
+              <span class="sheet-update-status badge rounded-pill bg-white text-primary border px-3 py-2 shadow-sm">Đang tải...</span>
+            </div>
+            <div class="row g-4 align-items-stretch">
+              <div class="col-lg-4 col-md-6" id="card-tool-1" data-aos="zoom-in" data-aos-delay="100">
+                <a href="https://nguyen842-ai.github.io/Tool-ve-ban-do/" class="report-card">
+                  <div class="card-img-wrap"><img src="assets/img/portfolio/portfolio-8.png" alt="Tool"></div>
+                  <div class="p-4 d-flex flex-column flex-grow-1">
+                    <span class="badge bg-dark w-auto align-self-start mb-2 rounded-pill">Map Tool</span>
+                    <h4 data-i18n="tool1-title">1. Tool vẽ bản đồ</h4>
+                    <p data-i18n="tool1-desc">Cung cấp bản đồ hành chính Việt Nam cấp 1 và cấp 2 trước sáp nhập tháng 7/2025. Hỗ trợ tool khoanh vùng, ghim khách hàng key.</p>
+                  </div>
+                </a>
+              </div>
+              
+              <div class="col-lg-4 col-md-6" id="card-tool-2" data-aos="zoom-in" data-aos-delay="200">
+                <div class="report-card">
+                  <a href="https://nguyen842-ai.github.io/Tool-toi-uu-tuyen/" class="text-decoration-none flex-grow-1 p-4 pb-0 d-flex flex-column">
+                    <span class="badge bg-dark w-auto align-self-start mb-2 rounded-pill">AI Tool</span>
+                    <h4 data-i18n="tool2-title">2. Tool kiểm tra và tối ưu hóa tuyến bán hàng</h4>
+                    <p data-i18n="tool2-desc">Kiểm tra chi tiết tính hợp lệ của tuyến bán hàng, tối ưu tuyến bán hàng bằng trợ lý AI.</p>
+                  </a>
+                  <div class="p-4 pt-3 mt-auto bg-white border-top">
+                    <!-- Nút phụ cũng được bo tròn (pill) -->
+                    <a href="https://nguyen842-ai.github.io/In-depth-Evaluation-route/" class="btn btn-primary btn-sm w-100 mb-2 fw-bold card-pill-btn" style="background: #47b2e4; border:none;">
+                      <span data-i18n="tool-new-title">Đánh Giá Hiệu Quả Tuyến</span>
+                    </a>
+                    <a href="https://www.youtube.com/watch?v=Agd__MAJTPA" target="_blank" class="btn btn-outline-secondary btn-sm w-100 fw-bold bg-white card-pill-btn">
+                      <i class="bi bi-youtube text-danger"></i> <span data-i18n="tool-guide-title">Hướng dẫn sử dụng</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
 
-            document.getElementById(`tab-btn-${tabId}`).classList.remove('tab-inactive');
-            document.getElementById(`tab-btn-${tabId}`).classList.add('tab-active');
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden-element');
+              <div class="col-lg-4 col-md-6" id="card-tool-3" data-aos="zoom-in" data-aos-delay="300">
+                <a href="https://nguyen842-ai.github.io/Tool-xu-li-dskh/" class="report-card">
+                  <div class="card-img-wrap"><img src="assets/img/portfolio/portfolio-9.png" alt="Tool"></div>
+                  <div class="p-4 d-flex flex-column flex-grow-1">
+                    <span class="badge bg-dark w-auto align-self-start mb-2 rounded-pill">Data Tool</span>
+                    <h4 data-i18n="tool3-title">3. Tool kiểm tra hành chính VN</h4>
+                    <p data-i18n="tool3-desc">Kiểm tra đơn vị hành chính của khách hàng đến cấp phường xã phục vụ cho việc xếp tuyến theo khu vực</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+    
+    <footer class="py-4 mt-auto" style="background-color: rgba(55, 81, 126, 0.9);">
+      <div class="container text-center">
+        <p data-i18n="footer-text" class="m-0 text-white small fw-bold">Bản quyền &copy; thuộc về Thai Corp International (Vietnam) Co., Ltd. Bảo lưu mọi quyền.</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+
+  <!-- LOGIC SCRIPT -->
+  <script>
+    // Kích hoạt hiệu ứng Animation (AOS)
+    AOS.init({
+      duration: 800,
+      easing: "ease-in-out",
+      once: false, 
+      mirror: false
+    });
+
+    function switchTab(tabId) {
+      // 1. Ẩn tất cả nội dung tab và xóa trạng thái active của nút
+      document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.add('d-none');
+      });
+      
+      // 2. Bật Tab và nút hiện tại
+      document.getElementById(`tab-btn-${tabId}`).classList.add('active');
+      const targetTab = document.getElementById(`tab-${tabId}`);
+      targetTab.classList.remove('d-none');
+      
+      // 3. FIX LỖI ẨN THẺ: Reset lại toàn bộ hiệu ứng AOS trong tab mục tiêu
+      const aosElements = targetTab.querySelectorAll('[data-aos]');
+      aosElements.forEach(el => el.classList.remove('aos-animate'));
+
+      // Đợi trình duyệt render layout (50ms) sau đó ép AOS hiển thị ngay lập tức
+      setTimeout(() => {
+        AOS.refresh(); // Tính toán lại vị trí
+        aosElements.forEach(el => el.classList.add('aos-animate')); // Bắt buộc hiện thẻ
+      }, 50);
+    }
+
+    (function() {
+      const SUPABASE_URL = "https://mrqldgycwovpbmzdeuyz.supabase.co";
+      const SUPABASE_ANON_KEY = "sb_publishable_itZfZBVw7bxE184tGh7x8A_0_r-QB5p";
+      const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      const loginSection = document.getElementById('login-section');
+      const mainPortal = document.getElementById('main-portal');
+      const userGreeting = document.getElementById('user-greeting');
+      const loginErrorMsg = document.getElementById('login-error-msg');
+      const loginErrorText = document.getElementById('login-error-text');
+      
+      const cardPrimary1 = document.getElementById('card-primary-1');
+      const card1 = document.getElementById('card-report-1');
+      const card2 = document.getElementById('card-report-2');
+      const card3 = document.getElementById('card-report-3');
+      const card4 = document.getElementById('card-report-4'); 
+      const card5 = document.getElementById('card-report-5');
+      const card6 = document.getElementById('card-report-6'); 
+      const cardTool1 = document.getElementById('card-tool-1');
+      const cardTool2 = document.getElementById('card-tool-2'); 
+      const cardTool3 = document.getElementById('card-tool-3');
+
+      const tabBtnPrimary = document.getElementById('tab-btn-primary').parentElement;
+      const tabBtnSupport = document.getElementById('tab-btn-support').parentElement;
+      
+      let currentUserEmail = "";
+      let currentLang = "vi";
+
+      const translations = {
+        vi: {
+            "login-title": "Hệ thống báo cáo",
+            "login-subtitle": "Vui lòng đăng nhập để truy cập vào hệ thống dữ liệu nội bộ của Thai Corp International.",
+            "email-label": "Tài khoản Email",
+            "password-label": "Mật khẩu",
+            "login-btn": "Đăng nhập hệ thống",
+            "logout-btn": "Đăng xuất",
+            "main-title": "Hệ Thống Báo Cáo Nội Bộ",
+            "empty-primary": "Đang cập nhật...",
+            "prim1-title": "1. Summary Performance sales team",
+            "prim1-desc": "Tổng hợp target, actual performance sell in- sell out của Sales team theo khách hàng và doanh số.",
+            "rep1-title": "1. FUNDAMENTAL REPORT",
+            "rep1-desc": "Tổng quan tình hình xây dựng và thực thi tuyến bán hàng: cung cấp các chỉ số phục vụ cho quyết định chiến lược sắp tới.",
+            "rep2-title": "2. Route productivities",
+            "rep2-desc": "Phân tích chi tiết hiệu suất tuyến theo từng ngày: Cung cấp chi tiết chỉ số theo ngày phục vụ cho mục đích cải thiện tuyến bán hàng.",
+            "rep3-title": "1. Route & Revenue Tracker",
+            "rep3-desc": "Báo cáo chi tiết ghé thăm khách hàng theo từng tuần: Tuyến đường, lộ trình, vị trí khách hàng và doanh số.",
+            "rep4-title": "1. Coverage Report",
+            "rep4-desc": "Độ bao phủ theo khu vực địa lý hành chính Việt Nam trước sáp nhập tháng 07/2025.",
+            "rep5-title": "2. Summary Wet market project",
+            "rep5-desc": "Báo cáo chung tình hình dự án tuyến chợ truyền thống: cung cấp các thông tin và chỉ số phục vụ cho quyết định chiến lược sắp tới.",
+            "rep6-title": "3. Wet market productivities",
+            "rep6-desc": "Phân tích chi tiết hiệu suất tuyến theo từng ngày của tuyến chợ truyền thống phục vụ cho mục đích cải thiện tuyến bán hàng.",
+            "tab-display": "Display Process",
+            "disp1-title": "1. Display process — TT Channel",
+            "disp1-desc": "Quy trình trưng bày kênh TT: tiêu chuẩn POSM, trả thưởng, kế hoạch theo NPP và form mẫu.",
+            "tool1-title": "1. Tool vẽ bản đồ",
+            "tool1-desc": "Cung cấp bản đồ hành chính Việt Nam cấp 1 và cấp 2 trước sáp nhập tháng 7/2025. Hỗ trợ tool khoanh vùng, ghim khách hàng key.",
+            "tool2-title": "2. Tool kiểm tra và tối ưu hóa tuyến",
+            "tool2-desc": "Kiểm tra chi tiết tính hợp lệ của tuyến bán hàng, tối ưu tuyến bán hàng bằng trợ lý AI.",
+            "tool-new-title": "Đánh Giá Hiệu Quả Tuyến",
+            "tool-guide-title": "Hướng dẫn sử dụng",
+            "tool3-title": "3. Tool kiểm tra hành chính VN",
+            "tool3-desc": "Kiểm tra đơn vị hành chính của khách hàng đến cấp phường xã phục vụ cho việc xếp tuyến theo khu vực.",
+            "greeting-prefix": "Xin chào, ",
+            "err-credentials": "Tài khoản hoặc mật khẩu không chính xác.",
+            "err-generic": "Có lỗi xảy ra, vui lòng thử lại!",
+            "btn-loading": "Đang xử lý...",
+            "footer-text": "Bản quyền © thuộc về Thai Corp International (Vietnam) Co., Ltd. Bảo lưu mọi quyền."
+        },
+        en: {
+            "login-title": "Reporting System",
+            "login-subtitle": "Please log in to access the internal data system of Thai Corp International.",
+            "email-label": "Email Account",
+            "password-label": "Password",
+            "login-btn": "Login to System",
+            "logout-btn": "Logout",
+            "main-title": "Internal Reporting System",
+            "empty-primary": "Processing...",
+            "prim1-title": "1. Summary Performance sales team",
+            "prim1-desc": "Summary of target, actual sell-in and sell-out performance of the Sales team by customer and revenue.",
+            "rep1-title": "1. FUNDAMENTAL REPORT",
+            "rep1-desc": "Overview of sales route construction and execution: providing metrics for upcoming strategic decisions.",
+            "rep2-title": "2. Route productivities",
+            "rep2-desc": "Detailed daily route productivity analysis: Providing daily metrics for route improvement purposes.",
+            "rep3-title": "1. Route & Revenue Tracker",
+            "rep3-desc": "Detailed weekly customer visit report: Routes, itineraries, customer locations, and sales tracking.",
+            "rep4-title": "1. Coverage Report",
+            "rep4-desc": "Coverage by Vietnam's administrative geographical areas prior to the July 2025 merger.",
+            "rep5-title": "2. Summary Wet market project",
+            "rep5-desc": "General report on wet market project status: providing information and metrics for upcoming strategic decisions.",
+            "rep6-title": "3. Wet market productivities",
+            "rep6-desc": "Detailed daily route productivity analysis for wet markets: Providing daily metrics for route improvement.",
+            "tab-display": "Display Process",
+            "disp1-title": "1. Display process — TT Channel",
+            "disp1-desc": "TT Channel display process: POSM standards, rewards, NPP allocation plan, and form templates.",
+            "tool1-title": "1. Mapping Tool",
+            "tool1-desc": "Provides administrative maps of Vietnam at level 1 and level 2. Supports zoning, pinning key customers.",
+            "tool2-title": "2. Route Inspection & Optimization Tool",
+            "tool2-desc": "Detailed validation of sales routes, optimizing routes using an AI assistant.",
+            "tool-new-title": "Tracking Effective & Efficiency",
+            "tool-guide-title": "Tool User Guide",
+            "tool3-title": "3. Administrative Units Checker Tool",
+            "tool3-desc": "Check customer administrative divisions down to the ward/commune level for regional route planning.",
+            "greeting-prefix": "Hello, ",
+            "err-credentials": "Invalid email or password.",
+            "err-generic": "An error occurred, please try again!",
+            "btn-loading": "Processing...",
+            "footer-text": "Copyright © by Thai Corp International (Vietnam) Co., Ltd. All rights reserved."
         }
+      };
 
-        (function() {
-            const SUPABASE_URL = "https://mrqldgycwovpbmzdeuyz.supabase.co";
-            const SUPABASE_ANON_KEY = "sb_publishable_itZfZBVw7bxE184tGh7x8A_0_r-QB5p";
-            const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      function updateLanguageTexts() {
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          if (translations[currentLang][key]) {
+            el.innerHTML = translations[currentLang][key];
+          }
+        });
+        if (currentUserEmail) {
+          userGreeting.textContent = translations[currentLang]["greeting-prefix"] + currentUserEmail;
+        }
+      }
 
-            const loginSection = document.getElementById('login-section');
-            const mainPortal = document.getElementById('main-portal');
-            const userGreeting = document.getElementById('user-greeting');
-            const loginErrorMsg = document.getElementById('login-error-msg');
-            const loginErrorText = document.getElementById('login-error-text');
-            
-            const cardPrimary1 = document.getElementById('card-primary-1');
-            
-            const card1 = document.getElementById('card-report-1');
-            const card2 = document.getElementById('card-report-2');
-            const card3 = document.getElementById('card-report-3');
-            const card4 = document.getElementById('card-report-4'); 
-            const card5 = document.getElementById('card-report-5');
-            const card6 = document.getElementById('card-report-6'); 
-            
-            const cardTool1 = document.getElementById('card-tool-1');
-            const cardTool2 = document.getElementById('card-tool-2'); 
-            const cardTool3 = document.getElementById('card-tool-3');
+      const btnVi = document.getElementById('lang-vi');
+      const btnEn = document.getElementById('lang-en');
 
-            const tabBtnPrimary = document.getElementById('tab-btn-primary');
-            const tabBtnSupport = document.getElementById('tab-btn-support');
-            
-            let currentUserEmail = "";
-            let currentLang = "vi";
+      function setLanguage(lang) {
+        currentLang = lang;
+        if (lang === 'vi') {
+          btnVi.className = "btn btn-sm btn-primary fw-bold d-flex align-items-center gap-1";
+          btnVi.style.background = "#47b2e4"; btnVi.style.color = "#fff";
+          btnEn.className = "btn btn-sm btn-light text-muted d-flex align-items-center gap-1";
+          btnEn.style.background = "#fff";
+        } else {
+          btnEn.className = "btn btn-sm btn-primary fw-bold d-flex align-items-center gap-1";
+          btnEn.style.background = "#47b2e4"; btnEn.style.color = "#fff";
+          btnVi.className = "btn btn-sm btn-light text-muted d-flex align-items-center gap-1";
+          btnVi.style.background = "#fff";
+        }
+        updateLanguageTexts();
+      }
 
-            const translations = {
-                vi: {
-                    "login-title": "Hệ thống báo cáo",
-                    "login-subtitle": "Vui lòng đăng nhập để tiếp tục",
-                    "email-label": "Tài khoản Email",
-                    "password-label": "Mật khẩu",
-                    "login-btn": "Đăng nhập hệ thống",
-                    "logout-btn": "Đăng xuất",
-                    "main-title": "Hệ Thống Báo Cáo Nội Bộ",
-                    "empty-primary": "Đang cập nhật...",
-                    "prim1-title": "1. Summary Performance sales team",
-                    "prim1-desc": "Tổng hợp target, actual performance sell in- sell out của Sales team theo khách hàng và doanh số.",
-                    "rep1-title": "1. FUNDAMENTAL REPORT",
-                    "rep1-desc": "Báo cáo các chỉ số nền tảng cốt lõi cho các quyết định chiến lược sắp tới.",
-                    "rep2-title": "2. Route productivities",
-                    "rep2-desc": "Phân tích chi tiết hiệu suất tuyến theo từng ngày: Cung cấp chi tiết chỉ số theo ngày phục vụ cho mục đích cải thiện tuyến bán hàng",
-                    "rep3-title": "1. Route & Revenue Tracker",
-                    "rep3-desc": "Báo cáo chi tiết ghé thăm khách hàng theo từng tuần: Tuyến đường, lộ trình, vị trí khách hàng và doanh số",
-                    "rep4-title": "1. Coverage Report",
-                    "rep4-desc": "Độ bao phủ theo khu vực địa lý hành chính Việt Nam trước sáp nhập tháng 07/2025.",
-                    "rep5-title": "2. Summary Wet market project",
-                    "rep5-desc": "Báo cáo chung tình hình dự án tuyến chợ truyền thống: cung cấp các thông tin và chỉ số phục vụ cho quyết định chiến lược sắp tới",
-                    "rep6-title": "3. Wet market productivities",
-                    "rep6-desc": "Phân tích chi tiết hiệu suất tuyến theo từng ngày của tuyến chợ truyền thống: Cung cấp chi tiết chỉ số theo ngày phục vụ cho mục đích cải thiện tuyến bán hàng.",
-                    "tab-display": "Display process",
-                    "disp1-title": "1. Display process — TT Channel",
-                    "disp1-desc": "Quy trình trưng bày kênh TT: tiêu chuẩn POSM, trả thưởng, kế hoạch theo NPP và form mẫu.",
-                    "tool1-title": "1. Tool vẽ bản đồ",
-                    "tool1-desc": "Cung cấp bản đồ hành chính Việt Nam cấp 1 (Tỉnh/Thành phố) và cấp 2 (Quận huyện) trước sáp nhập tháng 7/2025. Hỗ trợ tool khoanh vùng, ghim khách hàng key, nhà phân phối.",
-                    "tool2-title": "2. Tool kiểm tra và tối ưu hóa tuyến bán hàng",
-                    "tool2-desc": "Kiểm tra chi tiết tính hợp lệ của tuyến bán hàng, tối ưu tuyến bán hàng bằng trợ lý AI.",
-                    "tool-new-title": "Đánh Giá Hiệu Quả & Năng Suất Tuyến",
-                    "tool-guide-title": "Hướng dẫn sử dụng tool",
-                    "tool3-title": "3. Tool kiểm tra đơn vị hành chính Việt Nam các cấp trước sáp nhập",
-                    "tool3-desc": "Kiểm tra đơn vị hành chính của khách hàng đến cấp phường xã phục vụ cho việc xếp tuyến theo khu vực",
-                    "greeting-prefix": "Xin chào, ",
-                    "err-credentials": "Tài khoản email hoặc mật khẩu không chính xác.",
-                    "err-generic": "Có lỗi xảy ra, vui lòng thử lại!",
-                    "btn-loading": "Đang xử lý...",
-                    "footer-text": "Bản quyền © thuộc về Thai Corp International (Vietnam) Co., Ltd. Bảo lưu mọi quyền."
-                },
-                en: {
-                    "login-title": "Reporting System",
-                    "login-subtitle": "Please log in to continue",
-                    "email-label": "Email Account",
-                    "password-label": "Password",
-                    "login-btn": "Login to System",
-                    "logout-btn": "Logout",
-                    "main-title": "Internal Reporting System",
-                    "empty-primary": "Processing...",
-                    "prim1-title": "1. Summary Performance sales team",
-                    "prim1-desc": "Summary of target, actual sell-in and sell-out performance of the Sales team by customer and revenue.",
-                    "rep1-title": "1. FUNDAMENTAL REPORT",
-                    "rep1-desc": "Providing fundamental metrics for upcoming strategic decisions.",
-                    "rep2-title": "2. Route productivities",
-                    "rep2-desc": "Detailed daily route productivity analysis: Providing daily metrics for route improvement purposes.",
-                    "rep3-title": "1. Route & Revenue Tracker",
-                    "rep3-desc": "Detailed weekly customer visit report: Routes, itineraries, customer locations, and sales tracking.",
-                    "rep4-title": "1. Coverage Report",
-                    "rep4-desc": "Coverage by Vietnam's administrative geographical areas prior to the July 2025 merger.",
-                    "rep5-title": "2. Summary Wet market project",
-                    "rep5-desc": "General report on wet market project status: providing information and metrics for upcoming strategic decisions.",
-                    "rep6-title": "3. Wet market productivities",
-                    "rep6-desc": "Detailed daily route productivity analysis for wet markets: Providing daily metrics for route improvement.",
-                    "tab-display": "Display process",
-                    "disp1-title": "1. Display process — TT Channel",
-                    "disp1-desc": "TT Channel display process: POSM standards, rewards, NPP allocation plan, and form templates.",
-                    "tool1-title": "1. Mapping Tool",
-                    "tool1-desc": "Provides administrative maps of Vietnam at level 1 (Provinces/Cities) and level 2 (Districts) prior to the July 2025 merger. Supports zoning, pinning key customers and distributors.",
-                    "tool2-title": "2. Route Inspection & Optimization Tool",
-                    "tool2-desc": "Detailed validation of sales routes, optimizing routes using an AI assistant.",
-                    "tool-new-title": "Tracking Effective & Efficiency Route",
-                    "tool-guide-title": "Tool User Guide",
-                    "tool3-title": "3. Administrative Units Checker Tool",
-                    "tool3-desc": "Check customer administrative divisions down to the ward/commune level for regional route planning.",
-                    "greeting-prefix": "Hello, ",
-                    "err-credentials": "Invalid email or password.",
-                    "err-generic": "An error occurred, please try again!",
-                    "btn-loading": "Processing...",
-                    "footer-text": "Copyright © by Thai Corp International (Vietnam) Co., Ltd. All rights reserved."
-                }
-            };
+      btnVi.addEventListener('click', () => setLanguage('vi'));
+      btnEn.addEventListener('click', () => setLanguage('en'));
 
-            function updateLanguageTexts() {
-                const elements = document.querySelectorAll('[data-i18n]');
-                elements.forEach(el => {
-                    const key = el.getAttribute('data-i18n');
-                    if (translations[currentLang][key]) {
-                        el.innerHTML = translations[currentLang][key];
-                    }
-                });
+      function updateDateStatuses() {
+        const today = new Date();
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yDay = String(yesterday.getDate()).padStart(2, '0');
+        const yMonth = months[yesterday.getMonth()];
+        const yYear = String(yesterday.getFullYear()).slice(-2);
+        
+        document.getElementById('daily-update-status').textContent = `Last updated: ${yDay} ${yMonth} '${yYear}`;
+        
+        const lastMonthDate = new Date(today);
+        lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
+        const lmMonth = months[lastMonthDate.getMonth()];
+        const lmYear = String(lastMonthDate.getFullYear()).slice(-2);
+        
+        const lastMonthText = `Last update: ${lmMonth} '${lmYear}`;
+        document.getElementById('monthly-update-status').textContent = lastMonthText;
+        document.getElementById('primary-update-status').textContent = lastMonthText;
+      }
+      updateDateStatuses();
+      
+      async function fetchGoogleSheetData() {
+        const sheetStatusElements = document.querySelectorAll('.sheet-update-status');
+        try {
+          const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxAQTGjMeMrttvBEg1WzxPZHSeOznzZ4h8c95OdxYGSUS7cJiZ7iVxKUfDEddCfrsi9_Q/exec"; 
+          const response = await fetch(GAS_API_URL);
+          const data = await response.json();
+          const textToDisplay = data.text ? data.text : (currentLang === 'vi' ? "Cập nhật thành công." : "Updated successfully.");
+          sheetStatusElements.forEach(el => el.textContent = textToDisplay);
+        } catch (error) {
+          const errorText = currentLang === 'vi' ? "Hệ thống đang hoạt động bình thường." : "System is operational.";
+          sheetStatusElements.forEach(el => el.textContent = errorText);
+        }
+      }
 
-                if (currentUserEmail) {
-                    userGreeting.textContent = translations[currentLang]["greeting-prefix"] + currentUserEmail;
-                }
-            }
+      function applyUIPermissions(userEmail) {
+        currentUserEmail = userEmail;
+        updateLanguageTexts();
 
-            const btnVi = document.getElementById('lang-vi');
-            const btnEn = document.getElementById('lang-en');
+        if (userEmail === 'guest@tcivn.com') {
+          if (cardPrimary1) cardPrimary1.classList.add('d-none');
+          card1.classList.add('d-none');
+          card2.classList.add('d-none');
+          card3.classList.add('d-none');
+          card4.classList.add('d-none');
+          card6.classList.add('d-none');
+          cardTool1.classList.add('d-none');
+          cardTool2.classList.add('d-none'); 
+          cardTool3.classList.add('d-none');
+          tabBtnPrimary.classList.add('d-none');
+          tabBtnSupport.classList.add('d-none');
+          switchTab('secondary');
+        } else {
+          if (cardPrimary1) cardPrimary1.classList.remove('d-none');
+          card1.classList.remove('d-none');
+          card2.classList.remove('d-none');
+          card3.classList.remove('d-none');
+          card4.classList.remove('d-none');
+          card5.classList.remove('d-none');
+          card6.classList.remove('d-none');
+          cardTool1.classList.remove('d-none');
+          cardTool2.classList.remove('d-none');
+          cardTool3.classList.remove('d-none');
+          tabBtnPrimary.classList.remove('d-none');
+          tabBtnSupport.classList.remove('d-none');
+          switchTab('secondary');
+        }
+      }
 
-            function setLanguage(lang) {
-                currentLang = lang;
-                const activeClasses = "px-3 py-1.5 rounded-md text-sm font-bold transition-all duration-200 bg-white text-[#0c4da2] shadow-sm";
-                const inactiveClasses = "px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 text-gray-500 hover:text-gray-700";
-                
-                if (lang === 'vi') {
-                    btnVi.className = activeClasses;
-                    btnEn.className = inactiveClasses;
-                } else {
-                    btnEn.className = activeClasses;
-                    btnVi.className = inactiveClasses;
-                }
-                updateLanguageTexts();
-            }
+      supabaseClient.auth.onAuthStateChange((event, session) => {
+        if (session && session.user) {
+          loginSection.classList.add('d-none');
+          loginErrorMsg.classList.add('d-none'); 
+          mainPortal.classList.remove('d-none');
+          document.body.style.backgroundColor = "#f3f5fa"; // Nền cho Dashboard
+          applyUIPermissions(session.user.email);
+        } else {
+          currentUserEmail = "";
+          loginSection.classList.remove('d-none');
+          mainPortal.classList.add('d-none');
+          document.body.style.backgroundColor = "#fff"; // Nền cho Login
+        }
+      });
 
-            btnVi.addEventListener('click', () => setLanguage('vi'));
-            btnEn.addEventListener('click', () => setLanguage('en'));
+      document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const btn = document.getElementById('login-btn');
+        const btnTextSpan = btn.querySelector('span');
 
-            // TÍNH TOÁN NGÀY THÁNG ĐỘNG
-            function updateDateStatuses() {
-                const today = new Date();
-                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                
-                // Yesterday (Daily report)
-                const yesterday = new Date(today);
-                yesterday.setDate(yesterday.getDate() - 1);
-                const yDay = String(yesterday.getDate()).padStart(2, '0');
-                const yMonth = months[yesterday.getMonth()];
-                const yYear = String(yesterday.getFullYear()).slice(-2);
-                
-                document.getElementById('daily-update-status').textContent = `Last updated: ${yDay} ${yMonth} '${yYear}`;
-                
-                // Last month (Monthly report & Primary report)
-                const lastMonthDate = new Date(today);
-                lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
-                const lmMonth = months[lastMonthDate.getMonth()];
-                const lmYear = String(lastMonthDate.getFullYear()).slice(-2);
-                
-                const lastMonthText = `Last update: ${lmMonth} '${lmYear}`;
-                document.getElementById('monthly-update-status').textContent = lastMonthText;
-                document.getElementById('primary-update-status').textContent = lastMonthText;
-            }
+        loginErrorMsg.classList.add('d-none');
+        btnTextSpan.textContent = translations[currentLang]["btn-loading"];
+        btn.disabled = true;
 
-            // Gọi hàm tính toán ngày 
-            updateDateStatuses();
-            
-            // LẤY DỮ LIỆU TỪ GOOGLE SHEET CHỈ CHO WEEKLY / DISPLAY / SUPPORT
-            async function fetchGoogleSheetData() {
-                const sheetStatusElements = document.querySelectorAll('.sheet-update-status');
-                try {
-                    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxAQTGjMeMrttvBEg1WzxPZHSeOznzZ4h8c95OdxYGSUS7cJiZ7iVxKUfDEddCfrsi9_Q/exec"; 
-                    const response = await fetch(GAS_API_URL);
-                    const data = await response.json();
-                    
-                    const textToDisplay = data.text ? data.text : (currentLang === 'vi' ? "Cập nhật thành công." : "Updated successfully.");
-                    sheetStatusElements.forEach(el => el.textContent = textToDisplay);
-                    
-                } catch (error) {
-                    console.error("Lỗi khi tải dữ liệu Sheets:", error);
-                    const errorText = currentLang === 'vi' ? "Hệ thống đang hoạt động bình thường." : "The system is operating normally.";
-                    sheetStatusElements.forEach(el => el.textContent = errorText);
-                }
-            }
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        
+        if (error) {
+          let errorVN = translations[currentLang]["err-generic"];
+          if (error.message.includes("Invalid login credentials")) {
+            errorVN = translations[currentLang]["err-credentials"];
+          }
+          document.getElementById('login-error-text').textContent = errorVN;
+          loginErrorMsg.classList.remove('d-none');
+        }
+        
+        btnTextSpan.textContent = translations[currentLang]["login-btn"];
+        btn.disabled = false;
+      });
 
-            function applyUIPermissions(userEmail) {
-                currentUserEmail = userEmail;
-                updateLanguageTexts();
+      document.getElementById('logout-btn').addEventListener('click', async () => {
+        await supabaseClient.auth.signOut();
+        document.getElementById('email').value = '';
+        document.getElementById('password').value = '';
+      });
 
-                if (userEmail === 'guest@tcivn.com') {
-                    if (cardPrimary1) cardPrimary1.classList.add('hidden-element');
+      const cardDisplay1 = document.getElementById('card-display-1')?.querySelector('a');
+      if (cardDisplay1) {
+        cardDisplay1.addEventListener('click', async (e) => {
+          e.preventDefault();
+          const { data: { session } } = await supabaseClient.auth.getSession();
+          if (!session?.access_token || !session?.refresh_token) {
+            alert(translations[currentLang]["err-generic"] || "Vui lòng đăng nhập lại.");
+            return;
+          }
+          const target = new URL(cardDisplay1.href);
+          target.hash = new URLSearchParams({
+            access_token: session.access_token,
+            refresh_token: session.refresh_token
+          }).toString();
+          window.location.href = target.toString();
+        });
+      }
 
-                    card1.classList.add('hidden-element');
-                    card2.classList.add('hidden-element');
-                    card3.classList.add('hidden-element');
-                    card4.classList.add('hidden-element');
-                    card6.classList.add('hidden-element');
-                    
-                    cardTool1.classList.add('hidden-element');
-                    cardTool2.classList.add('hidden-element'); 
-                    cardTool3.classList.add('hidden-element');
-
-                    tabBtnPrimary.classList.add('hidden-element');
-                    tabBtnSupport.classList.add('hidden-element');
-
-                    switchTab('secondary');
-                } else {
-                    if (cardPrimary1) cardPrimary1.classList.remove('hidden-element');
-
-                    card1.classList.remove('hidden-element');
-                    card2.classList.remove('hidden-element');
-                    card3.classList.remove('hidden-element');
-                    card4.classList.remove('hidden-element');
-                    card5.classList.remove('hidden-element');
-                    card6.classList.remove('hidden-element');
-                    
-                    cardTool1.classList.remove('hidden-element');
-                    cardTool2.classList.remove('hidden-element');
-                    cardTool3.classList.remove('hidden-element');
-                    
-                    tabBtnPrimary.classList.remove('hidden-element');
-                    tabBtnSupport.classList.remove('hidden-element');
-                    
-                    switchTab('secondary');
-                }
-            }
-
-            supabaseClient.auth.onAuthStateChange((event, session) => {
-                if (session && session.user) {
-                    loginSection.classList.add('hidden-element');
-                    loginErrorMsg.classList.add('hidden-element'); 
-                    mainPortal.classList.remove('hidden-element');
-                    applyUIPermissions(session.user.email);
-                } else {
-                    currentUserEmail = "";
-                    loginSection.classList.remove('hidden-element');
-                    mainPortal.classList.add('hidden-element');
-                }
-            });
-
-            document.getElementById('login-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                const btn = document.getElementById('login-btn');
-                const btnTextSpan = btn.querySelector('span');
-
-                loginErrorMsg.classList.add('hidden-element');
-
-                btnTextSpan.textContent = translations[currentLang]["btn-loading"];
-                btn.disabled = true;
-
-                const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-                
-                if (error) {
-                    let errorVN = translations[currentLang]["err-generic"];
-                    if (error.message.includes("Invalid login credentials")) {
-                        errorVN = translations[currentLang]["err-credentials"];
-                    }
-                    
-                    loginErrorText.textContent = errorVN;
-                    loginErrorMsg.classList.remove('hidden-element');
-                }
-                
-                btnTextSpan.textContent = translations[currentLang]["login-btn"];
-                btn.disabled = false;
-            });
-
-            document.getElementById('logout-btn').addEventListener('click', async () => {
-                await supabaseClient.auth.signOut();
-                document.getElementById('email').value = '';
-                document.getElementById('password').value = '';
-            });
-
-            const cardDisplay1 = document.getElementById('card-display-1');
-            if (cardDisplay1) {
-                cardDisplay1.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    const { data: { session } } = await supabaseClient.auth.getSession();
-                    if (!session?.access_token || !session?.refresh_token) {
-                        alert(translations[currentLang]["err-generic"] || "Vui lòng đăng nhập lại.");
-                        return;
-                    }
-                    const target = new URL(cardDisplay1.href);
-                    target.hash = new URLSearchParams({
-                        access_token: session.access_token,
-                        refresh_token: session.refresh_token
-                    }).toString();
-                    window.location.href = target.toString();
-                });
-            }
-
-            fetchGoogleSheetData();
-
-        })(); 
-    </script>
+      fetchGoogleSheetData();
+    })(); 
+  </script>
 </body>
 </html>
