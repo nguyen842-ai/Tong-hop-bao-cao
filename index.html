@@ -223,16 +223,20 @@
   <!-- ============================================ -->
   <div id="main-portal" class="d-none d-flex flex-column min-vh-100">
     
-    <!-- 1. Header (Đã bỏ sticky-top để unfreeze, và đổi py-3 thành py-2 để thu hẹp) -->
-    <header id="header" class="header shadow-sm py-2 border-bottom" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);">
+    <!-- 1. Header (Đã làm trong suốt đồng bộ giao diện) -->
+    <header id="header" class="header py-2" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;">
       <div class="container d-flex align-items-center justify-content-between">
+        
         <a href="#" class="logo d-flex align-items-center text-decoration-none gap-2">
           <img src="logo.png" alt="Logo" class="img-fluid" style="max-height: 40px;">
-          <h1 class="fs-6 m-0 fw-bold d-none d-md-block" style="color: #37517e;">Thai Corp International</h1>
+          <!-- Đổi chữ thành màu trắng (text-white) để nổi bật trên nền trong suốt -->
+          <h1 class="fs-6 m-0 fw-bold d-none d-md-block text-white">Thai Corp International</h1>
         </a>
+
         <div class="d-flex align-items-center gap-3">
           <span id="user-greeting" class="text-white fw-bold small d-none d-sm-block px-2 py-1 bg-secondary bg-opacity-25 rounded-pill">Xin chào, ...</span>
-          <div class="btn-group border rounded-pill bg-white overflow-hidden" role="group">
+          
+          <div class="btn-group border rounded-pill bg-white overflow-hidden shadow-sm" role="group">
             <button type="button" id="lang-vi" class="btn btn-sm btn-primary fw-bold d-flex align-items-center gap-1" style="background: #47b2e4; border:none; border-radius:0;">
               <img src="https://flagcdn.com/w20/vn.png" width="18" alt="VN"> VI
             </button>
@@ -240,10 +244,12 @@
               <img src="https://flagcdn.com/w20/gb.png" width="18" alt="EN"> EN
             </button>
           </div>
+
           <button id="logout-btn" class="btn btn-sm btn-light border fw-bold text-danger px-3 shadow-sm hover-shadow bg-white rounded-pill">
             <i class="bi bi-box-arrow-right"></i> <span data-i18n="logout-btn">Đăng xuất</span>
           </button>
         </div>
+
       </div>
     </header>
 
